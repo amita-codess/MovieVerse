@@ -14,4 +14,4 @@ application-secret.properties
 *.key
 *.pem
 credentials.json
-
+target/
