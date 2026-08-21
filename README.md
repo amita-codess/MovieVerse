@@ -210,7 +210,7 @@ mvn spring-boot:run
 
 Open your browser and visit:
 ```
-http://localhost:8080
+http://localhost:3000/
 ```
 
 * **Default Demo User Account:**
