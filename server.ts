@@ -1384,5 +1384,5 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 });
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`MovieVerse secured server running on http://0.0.0.0:${PORT}`);
+  console.log(`MovieVerse secured server running on http://localhost:${PORT}`);
 });
