@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In - MovieVerse</title>
+  <meta name="description" content="Sign in to your MovieVerse account to access your personal watchlist and favourite movies.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            mv: {
+              bg: '#050505',
+              secondary: '#0f0f0f',
+              card: '#171717',
+              cardHover: '#212121',
+              accent: '#e50914',
+              accentHover: '#ff2633',
+              textPrimary: '#ffffff',
+              textSecondary: '#a3a3a3',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Poppins', 'Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Custom MovieVerse CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-[#050505] text-white min-h-screen font-sans flex flex-col selection:bg-[#e50914] selection:text-white">
+
+  <!-- Simple Navbar -->
+  <header class="bg-[#050505]/90 backdrop-blur-md border-b border-white/10 py-4">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 text-xl font-bold font-display tracking-wider text-white">
+        <div class="w-7 h-7 rounded-lg bg-[#e50914] flex items-center justify-center text-white text-sm">
+          <i class="bi bi-film"></i>
+        </div>
+        <span><span class="text-[#e50914]">MOVIE</span><span class="text-white">VERSE</span></span>
+      </a>
+      <a href="register.html" class="text-xs font-semibold px-3 py-1.5 rounded-lg border border-white/15 text-white/80 hover:text-white hover:bg-white/5 transition-colors">
+        Create Account
+      </a>
+    </div>
+  </header>
+
+  <!-- Login Card Section -->
+  <main class="flex-grow flex items-center justify-center py-12 px-4 sm:px-6">
+    <div class="w-full max-w-md bg-[#171717]/95 border border-white/10 rounded-2xl p-6 sm:p-8 shadow-2xl backdrop-blur-xl relative">
+      
+      <!-- Top Icon & Header -->
+      <div class="text-center mb-6">
+        <div class="w-12 h-12 rounded-xl bg-[#e50914]/15 border border-[#e50914]/30 flex items-center justify-center mx-auto mb-3 text-[#e50914] text-xl shadow-lg">
+          <i class="bi bi-shield-lock-fill"></i>
+        </div>
+        <h1 class="text-2xl font-black font-display text-white">Welcome Back</h1>
+        <p class="text-white/50 text-xs sm:text-sm mt-1">Sign in to sync your favourites and watchlist</p>
+      </div>
+
+      <!-- Error Alert Box -->
+      <div id="loginErrorAlert" class="hidden mb-4 p-3 rounded-xl bg-red-950/50 border border-[#e50914]/50 text-xs text-red-300 flex items-center gap-2">
+        <i class="bi bi-exclamation-circle-fill text-base text-[#e50914]"></i>
+        <span id="loginErrorMessage">Invalid credentials.</span>
+      </div>
+
+      <!-- Login Form -->
+      <form id="loginForm" class="space-y-4">
+        <div>
+          <label for="loginEmail" class="block text-xs font-semibold uppercase tracking-wider text-white/70 mb-1.5">
+            Email Address
+          </label>
+          <div class="relative">
+            <i class="bi bi-envelope absolute left-3.5 top-3 text-white/40 text-sm"></i>
+            <input type="email" 
+                   id="loginEmail" 
+                   class="w-full bg-[#0f0f0f] border border-white/15 text-white placeholder-white/30 text-sm rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:border-[#e50914] focus:ring-1 focus:ring-[#e50914] transition-all" 
+                   placeholder="alex@movieverse.com" 
+                   required>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label for="loginPassword" class="block text-xs font-semibold uppercase tracking-wider text-white/70">
+              Password
+            </label>
+            <span class="text-[11px] text-[#e50914] hover:underline cursor-pointer" onclick="fillDemoCredentials()">Use Demo Account</span>
+          </div>
+          <div class="relative">
+            <i class="bi bi-key absolute left-3.5 top-3 text-white/40 text-sm"></i>
+            <input type="password" 
+                   id="loginPassword" 
+                   class="w-full bg-[#0f0f0f] border border-white/15 text-white placeholder-white/30 text-sm rounded-xl pl-10 pr-10 py-2.5 focus:outline-none focus:border-[#e50914] focus:ring-1 focus:ring-[#e50914] transition-all" 
+                   placeholder="Enter your password" 
+                   required>
+            <button type="button" 
+                    class="absolute right-3 top-2.5 text-white/40 hover:text-white transition-colors" 
+                    onclick="togglePasswordVisibility()" 
+                    aria-label="Toggle password">
+              <i class="bi bi-eye text-sm" id="toggleIcon"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" 
+                id="submitLoginBtn"
+                class="btn-mv-primary w-full py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-lg shadow-[#e50914]/25 mt-2">
+          <span id="loginBtnText" class="flex items-center gap-2">
+            <i class="bi bi-box-arrow-in-right"></i> Sign In
+          </span>
+          <span id="loginSpinner" class="hidden spinner-border spinner-border-sm" role="status"></span>
+        </button>
+      </form>
+
+      <!-- Quick Demo Auto-Fill Box -->
+      <div class="mt-6 p-3.5 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between gap-2">
+        <div>
+          <div class="text-[11px] font-bold text-amber-400 flex items-center gap-1">
+            <i class="bi bi-lightning-charge-fill"></i> Test Demo Account
+          </div>
+          <div class="text-[11px] text-white/50 font-mono mt-0.5">
+            alex@movieverse.com / password123
+          </div>
+        </div>
+        <button type="button" 
+                onclick="fillDemoCredentials()" 
+                class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-amber-400/20 text-amber-300 hover:bg-amber-400/30 transition-colors shrink-0">
+          Auto-fill
+        </button>
+      </div>
+
+      <!-- Footer Link -->
+      <div class="text-center mt-6 pt-4 border-t border-white/10 text-xs text-white/50">
+        Don't have an account yet? 
+        <a href="register.html" class="text-[#e50914] font-bold hover:underline ml-1">Create Account</a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-4 text-center text-xs text-white/40 border-t border-white/10">
+    © 2026 MovieVerse. Full-Stack Java Spring Boot & Tailwind CSS.
+  </footer>
+
+  <!-- Bootstrap 5 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- MovieVerse App Engine JS -->
+  <script src="js/app.js"></script>
+
+  <!-- Page Specific Logic -->
+  <script>
+    function togglePasswordVisibility() {
+      const input = document.getElementById('loginPassword');
+      const icon = document.getElementById('toggleIcon');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'bi bi-eye-slash text-sm';
+      } else {
+        input.type = 'password';
+        icon.className = 'bi bi-eye text-sm';
+      }
+    }
+
+    function fillDemoCredentials() {
+      document.getElementById('loginEmail').value = 'alex@movieverse.com';
+      document.getElementById('loginPassword').value = 'password123';
+      document.getElementById('loginErrorAlert').classList.add('hidden');
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const emailInput = document.getElementById('loginEmail');
+      const passInput = document.getElementById('loginPassword');
+      const errorAlert = document.getElementById('loginErrorAlert');
+      const errorMsg = document.getElementById('loginErrorMessage');
+      const btnText = document.getElementById('loginBtnText');
+      const spinner = document.getElementById('loginSpinner');
+      const submitBtn = document.getElementById('submitLoginBtn');
+
+      errorAlert.classList.add('hidden');
+
+      const email = emailInput.value.trim();
+      const password = passInput.value;
+
+      if (!email || !password) {
+        errorMsg.textContent = 'Please fill in both email and password.';
+        errorAlert.classList.remove('hidden');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      btnText.classList.add('hidden');
+      spinner.classList.remove('hidden');
+
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          Auth.setUser(data);
+          Toast.show(`Welcome back, ${data.name}!`, 'success');
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 600);
+        } else {
+          errorMsg.textContent = data.message || 'Invalid email or password.';
+          errorAlert.classList.remove('hidden');
+          submitBtn.disabled = false;
+          btnText.classList.remove('hidden');
+          spinner.classList.add('hidden');
+        }
+      } catch (err) {
+        console.error(err);
+        errorMsg.textContent = 'Network error. Please make sure the server is active.';
+        errorAlert.classList.remove('hidden');
+        submitBtn.disabled = false;
+        btnText.classList.remove('hidden');
+        spinner.classList.add('hidden');
+      }
+    });
+  </script>
+</body>
+</html>

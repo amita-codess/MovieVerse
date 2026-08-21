@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Details - MovieVerse</title>
+  <meta name="description" content="View comprehensive movie metadata, synopsis, director, starring cast, ratings, and watch trailers on MovieVerse.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            mv: {
+              bg: '#050505',
+              secondary: '#0f0f0f',
+              card: '#171717',
+              cardHover: '#212121',
+              accent: '#e50914',
+              accentHover: '#ff2633',
+              textPrimary: '#ffffff',
+              textSecondary: '#a3a3a3',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Poppins', 'Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Bootstrap 5 CSS (for modal & dropdown) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Custom MovieVerse CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-[#050505] text-white min-h-screen font-sans flex flex-col selection:bg-[#e50914] selection:text-white">
+
+  <!-- Sticky Navbar -->
+  <header class="sticky top-0 z-50 bg-[#050505]/90 backdrop-blur-xl border-b border-white/10" id="mainNavbar">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 md:h-20 gap-4">
+        
+        <!-- Logo Brand -->
+        <a href="index.html" class="flex items-center gap-2 text-xl md:text-2xl font-black font-display tracking-wider text-white shrink-0 group">
+          <div class="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-[#e50914] flex items-center justify-center text-white shadow-lg shadow-[#e50914]/30 group-hover:scale-105 transition-transform">
+            <i class="bi bi-film text-base md:text-lg"></i>
+          </div>
+          <span><span class="text-[#e50914]">MOVIE</span><span class="text-white">VERSE</span></span>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden lg:flex items-center gap-1 xl:gap-2">
+          <a href="index.html" class="nav-link-custom font-medium text-sm">
+            <i class="bi bi-house-door me-1.5"></i>Home
+          </a>
+          <a href="movies.html" class="nav-link-custom font-medium text-sm">
+            <i class="bi bi-collection-play me-1.5"></i>Movies
+          </a>
+          <a href="favourites.html" class="nav-link-custom font-medium text-sm">
+            <i class="bi bi-heart me-1.5"></i>Favourites
+          </a>
+          <a href="about.html" class="nav-link-custom font-medium text-sm">
+            <i class="bi bi-info-circle me-1.5"></i>About
+          </a>
+          <a href="architecture.html" class="nav-link-custom font-medium text-sm text-amber-400/90 hover:text-amber-400">
+            <i class="bi bi-cpu me-1.5"></i>Java Architecture
+          </a>
+        </nav>
+
+        <!-- Search Bar (Desktop) -->
+        <form class="hidden sm:flex items-center flex-1 max-w-xs md:max-w-sm relative" id="navSearchForm">
+          <input type="search" 
+                 id="navSearchInput"
+                 placeholder="Search movies..." 
+                 class="w-full bg-[#171717] border border-white/15 text-white placeholder-white/40 text-sm rounded-full pl-9 pr-10 py-2 focus:outline-none focus:border-[#e50914] transition-all">
+          <i class="bi bi-search absolute left-3 text-white/40 text-xs"></i>
+          <button type="submit" class="absolute right-2.5 text-white/40 hover:text-white transition-colors text-xs p-1" aria-label="Search">
+            <i class="bi bi-arrow-right"></i>
+          </button>
+        </form>
+
+        <!-- Auth Section & Mobile Hamburger -->
+        <div class="flex items-center gap-3">
+          <div id="navbarAuthSection" class="hidden sm:block"></div>
+
+          <button type="button" 
+                  id="mobileMenuToggle"
+                  class="lg:hidden p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 focus:outline-none"
+                  aria-label="Toggle menu">
+            <i class="bi bi-list text-2xl" id="menuIcon"></i>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Mobile Dropdown Menu -->
+      <div id="mobileMenu" class="hidden lg:hidden border-t border-white/10 py-4 px-2 space-y-2 animate-fade-in">
+        <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 font-medium">
+          <i class="bi bi-house-door text-white/60"></i> Home
+        </a>
+        <a href="movies.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 font-medium">
+          <i class="bi bi-collection-play text-white/60"></i> Movies
+        </a>
+        <a href="favourites.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 font-medium">
+          <i class="bi bi-heart text-[#e50914]"></i> Favourites
+        </a>
+        <a href="about.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 font-medium">
+          <i class="bi bi-info-circle text-white/60"></i> About
+        </a>
+        <a href="architecture.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-amber-400/90 hover:text-amber-400 hover:bg-white/5 font-medium">
+          <i class="bi bi-cpu"></i> Java Architecture
+        </a>
+        <div id="mobileNavbarAuthSection" class="pt-3 border-t border-white/10 sm:hidden"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-grow" id="detailsMainContainer">
+    
+    <!-- Hero Details Section with Backdrop -->
+    <div class="relative overflow-hidden bg-[#0a0a0a]" id="movieDetailsHero">
+      <!-- Backdrop Image -->
+      <div id="detailsBackdrop" class="absolute inset-0 bg-cover bg-center opacity-25 scale-105 transition-all duration-700 blur-[2px]"></div>
+      
+      <!-- Gradient Overlays -->
+      <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-transparent"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-[#050505] via-[#050505]/90 to-transparent hidden md:block"></div>
+
+      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-16 z-10">
+        
+        <!-- Breadcrumb Navigation -->
+        <nav class="flex items-center gap-2 text-xs text-white/50 mb-6 sm:mb-8">
+          <a href="index.html" class="hover:text-white transition-colors">Home</a>
+          <span>/</span>
+          <a href="movies.html" class="hover:text-white transition-colors">Movies</a>
+          <span>/</span>
+          <span class="text-white/80 font-medium truncate max-w-xs" id="breadcrumbTitle">Loading...</span>
+        </nav>
+
+        <!-- Movie Details Card Layout -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start">
+          
+          <!-- LEFT: Movie Poster -->
+          <div class="md:col-span-4 lg:col-span-4 flex flex-col items-center md:items-start">
+            <div class="relative w-full max-w-[320px] rounded-2xl overflow-hidden shadow-2xl border border-white/15 group aspect-[2/3] bg-[#171717]">
+              <img id="detailPosterImg" 
+                   src="" 
+                   alt="Movie Poster" 
+                   class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                   onerror="this.onerror=null; this.src=POSTER_FALLBACK_SVG;">
+              <div class="absolute top-3 left-3 bg-black/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-amber-400 border border-white/15 flex items-center gap-1.5 shadow-lg">
+                <i class="bi bi-star-fill text-amber-400"></i>
+                <span id="detailRating" class="text-sm">--</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: Movie Meta Information -->
+          <div class="md:col-span-8 lg:col-span-8 space-y-6">
+            
+            <div>
+              <div class="flex flex-wrap items-center gap-2 mb-3" id="detailGenreBadges">
+                <span class="genre-filter-pill">Loading...</span>
+              </div>
+
+              <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black font-display text-white tracking-tight leading-tight" id="detailTitle">
+                Loading Movie...
+              </h1>
+
+              <!-- Quick Meta Pill Row -->
+              <div class="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm text-white/60 mt-3">
+                <span class="inline-flex items-center gap-1.5 text-white/80 font-medium" id="detailYear">
+                  <i class="bi bi-calendar-event text-white/50"></i> ----
+                </span>
+                <span>•</span>
+                <span class="inline-flex items-center gap-1.5 text-white/80 font-medium" id="detailDuration">
+                  <i class="bi bi-clock text-white/50"></i> -- min
+                </span>
+                <span>•</span>
+                <span class="inline-flex items-center gap-1.5 text-amber-400 font-bold">
+                  <i class="bi bi-trophy-fill text-xs"></i> IMDb Score
+                </span>
+              </div>
+            </div>
+
+            <!-- Overview Synopsis -->
+            <div>
+              <h2 class="text-sm font-bold uppercase tracking-wider text-[#e50914] mb-2 font-display">Overview Synopsis</h2>
+              <p class="text-white/80 text-sm sm:text-base leading-relaxed" id="detailDescription">
+                Loading movie information...
+              </p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap items-center gap-3 pt-2 pb-2">
+              <button id="detailWatchTrailerBtn" class="btn-mv-primary px-6 py-3 rounded-xl text-sm font-bold flex items-center gap-2 shadow-lg shadow-[#e50914]/25" data-bs-toggle="modal" data-bs-target="#trailerModal">
+                <i class="bi bi-play-circle-fill text-lg"></i> Watch Trailer
+              </button>
+              <button id="detailsFavBtn" class="btn-mv-secondary px-6 py-3 rounded-xl text-sm font-semibold flex items-center gap-2" onclick="toggleDetailsFavourite()">
+                <i class="bi bi-heart text-base"></i> Add to Favourite
+              </button>
+            </div>
+
+            <!-- Metadata Information Cards Grid -->
+            <div class="bg-[#171717]/90 backdrop-blur-md border border-white/10 rounded-2xl p-4 sm:p-6 shadow-xl">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-white/40 mb-4 font-display">Movie Production Information</h3>
+              
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
+                <!-- Director -->
+                <div class="p-3 rounded-xl bg-white/5 border border-white/5 flex flex-col justify-between">
+                  <span class="text-white/40 text-xs font-semibold mb-1">Director</span>
+                  <span id="movieDirector" class="text-white font-medium text-sm">--</span>
+                </div>
+
+                <!-- Release Date -->
+                <div class="p-3 rounded-xl bg-white/5 border border-white/5 flex flex-col justify-between">
+                  <span class="text-white/40 text-xs font-semibold mb-1">Release Date</span>
+                  <span id="movieReleaseDate" class="text-white font-medium text-sm">--</span>
+                </div>
+
+                <!-- Audio Language -->
+                <div class="p-3 rounded-xl bg-white/5 border border-white/5 flex flex-col justify-between">
+                  <span class="text-white/40 text-xs font-semibold mb-1">Audio Language</span>
+                  <span id="movieLanguage" class="text-white font-medium text-sm">--</span>
+                </div>
+
+                <!-- Country of Origin -->
+                <div class="p-3 rounded-xl bg-white/5 border border-white/5 flex flex-col justify-between">
+                  <span class="text-white/40 text-xs font-semibold mb-1">Country of Origin</span>
+                  <span id="movieCountry" class="text-white font-medium text-sm">--</span>
+                </div>
+
+                <!-- Starring Cast (Full width) -->
+                <div class="sm:col-span-2 p-3 rounded-xl bg-white/5 border border-white/5">
+                  <span class="text-white/40 text-xs font-semibold mb-1 block">Starring Cast</span>
+                  <span id="movieCast" class="text-white font-medium text-sm leading-relaxed">--</span>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Related / Recommended Movies Section -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 border-t border-white/10" id="relatedMoviesSection">
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3">
+          <div class="w-1.5 h-6 bg-[#e50914] rounded-full"></div>
+          <h2 class="text-xl sm:text-2xl font-bold font-display text-white">
+            🎬 More Movies You May Like
+          </h2>
+        </div>
+        <a href="movies.html" class="text-xs sm:text-sm font-semibold text-white/60 hover:text-[#e50914] transition-colors flex items-center gap-1">
+          Explore All <i class="bi bi-arrow-right"></i>
+        </a>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6" id="relatedMoviesContainer">
+        <!-- Injected dynamically -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Trailer Modal -->
+  <div class="modal fade" id="trailerModal" tabindex="-1" aria-labelledby="trailerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content bg-[#171717] text-white border border-white/15 rounded-2xl overflow-hidden shadow-2xl">
+        <div class="modal-header border-b border-white/10 px-5 py-4">
+          <h5 class="modal-title flex items-center gap-2 text-base font-bold" id="trailerModalLabel">
+            <i class="bi bi-play-circle-fill text-[#e50914] text-lg"></i>
+            <span>Official Trailer - <span id="trailerModalTitle" class="text-white"></span></span>
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-0 bg-black">
+          <div class="ratio ratio-16x9">
+            <iframe id="trailerIframe" src="" title="Movie Trailer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="border:0;"></iframe>
+          </div>
+          <div id="trailerFallbackMessage" class="hidden p-8 text-center text-white/60">
+            <i class="bi bi-film text-4xl text-white/30 mb-3 block"></i>
+            <p class="text-sm">Trailer stream currently not available for this title.</p>
+          </div>
+        </div>
+        <div class="modal-footer border-t border-white/10 px-5 py-3 justify-between">
+          <span class="text-xs text-white/50"><i class="bi bi-info-circle me-1"></i>High quality trailer stream</span>
+          <button type="button" class="btn-mv-secondary px-4 py-1.5 text-xs rounded-lg" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-[#0a0a0a] border-t border-white/10 pt-12 pb-8 mt-auto text-sm text-white/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-6 border-b border-white/10 text-xs">
+        <a href="index.html" class="flex items-center gap-2 text-lg font-bold font-display text-white">
+          <div class="w-6 h-6 rounded-lg bg-[#e50914] flex items-center justify-center text-white text-xs">
+            <i class="bi bi-film"></i>
+          </div>
+          <span><span class="text-[#e50914]">MOVIE</span><span class="text-white">VERSE</span></span>
+        </a>
+        <div class="flex items-center gap-6">
+          <a href="index.html" class="hover:text-white transition-colors">Home</a>
+          <a href="movies.html" class="hover:text-white transition-colors">Browse Movies</a>
+          <a href="favourites.html" class="hover:text-white transition-colors">Favourites</a>
+          <a href="about.html" class="hover:text-white transition-colors">About</a>
+          <a href="architecture.html" class="hover:text-white transition-colors text-amber-400">Java Architecture</a>
+        </div>
+      </div>
+      <p class="text-center text-xs text-white/40 mt-6">© 2026 MovieVerse. Spring Boot REST API + Tailwind CSS.</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- MovieVerse App Engine JS -->
+  <script src="js/app.js"></script>
+
+  <!-- Page Specific Logic -->
+  <script>
+    let currentMovie = null;
+
+    // Mobile Hamburger Menu Toggle
+    const mobileToggle = document.getElementById('mobileMenuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (mobileToggle && mobileMenu) {
+      mobileToggle.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+        const icon = document.getElementById('menuIcon');
+        if (mobileMenu.classList.contains('hidden')) {
+          icon.className = 'bi bi-list text-2xl';
+        } else {
+          icon.className = 'bi bi-x-lg text-2xl';
+        }
+      });
+    }
+
+    function formatReleaseDate(dateStr) {
+      if (!dateStr || typeof dateStr !== 'string' || dateStr.trim() === '') {
+        return 'Not Available';
+      }
+      const trimmed = dateStr.trim();
+      const months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+      ];
+      const ymdMatch = trimmed.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+      if (ymdMatch) {
+        const year = parseInt(ymdMatch[1], 10);
+        const monthIndex = parseInt(ymdMatch[2], 10) - 1;
+        const day = parseInt(ymdMatch[3], 10);
+        if (monthIndex >= 0 && monthIndex < 12 && day >= 1 && day <= 31) {
+          return `${day} ${months[monthIndex]} ${year}`;
+        }
+      }
+      const parsedDate = new Date(trimmed);
+      if (!isNaN(parsedDate.getTime())) {
+        const day = parsedDate.getUTCDate();
+        const month = months[parsedDate.getUTCMonth()];
+        const year = parsedDate.getUTCFullYear();
+        return `${day} ${month} ${year}`;
+      }
+      return trimmed;
+    }
+
+    async function loadMovieDetails() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const movieId = urlParams.get('id') || '1';
+
+      try {
+        const res = await fetch(`/api/movies/${encodeURIComponent(movieId)}`);
+        if (!res.ok) {
+          if (res.status === 404) {
+            showNotFoundState("Movie with specified ID was not found in our catalog.");
+            return;
+          }
+          throw new Error(`Failed to load movie (HTTP ${res.status})`);
+        }
+
+        const movie = await res.json();
+        currentMovie = movie;
+
+        // Document & breadcrumb title
+        const safeTitle = movie.title || "Untitled Movie";
+        document.title = `${safeTitle} - MovieVerse`;
+        
+        const setElemText = (id, val) => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = val;
+        };
+
+        setElemText('breadcrumbTitle', safeTitle);
+        setElemText('detailTitle', safeTitle);
+        setElemText('trailerModalTitle', safeTitle);
+        
+        // Rating
+        const ratingVal = typeof movie.rating === 'number' ? movie.rating.toFixed(1) : (movie.rating ? String(movie.rating) : 'N/A');
+        setElemText('detailRating', ratingVal);
+        
+        // Description / Overview
+        const safeDesc = movie.description || "No synopsis available for this movie.";
+        setElemText('detailDescription', safeDesc);
+        
+        // Detailed Meta Cards with Safe Fallbacks
+        const safeDirector = movie.director || "Not Available";
+        setElemText('movieDirector', safeDirector);
+
+        const safeCast = movie.cast || movie.starringCast || "Not Available";
+        setElemText('movieCast', safeCast);
+
+        const safeReleaseDate = formatReleaseDate(movie.releaseDate);
+        setElemText('movieReleaseDate', safeReleaseDate);
+
+        const safeLanguage = movie.language || "Not Available";
+        setElemText('movieLanguage', safeLanguage);
+
+        const safeCountry = movie.country || "Not Available";
+        setElemText('movieCountry', safeCountry);
+
+        // Duration formatting
+        let formattedDuration = "Not Available";
+        if (movie.duration) {
+          if (typeof movie.duration === 'number') {
+            formattedDuration = `${movie.duration} min`;
+          } else {
+            formattedDuration = movie.duration.includes('min') ? movie.duration : `${movie.duration} min`;
+          }
+        }
+        const durationEl = document.getElementById('detailDuration');
+        if (durationEl) durationEl.innerHTML = `<i class="bi bi-clock text-white/50"></i> ${formattedDuration}`;
+
+        // Release Year
+        let releaseYear = "----";
+        if (movie.releaseDate && movie.releaseDate.length >= 4) {
+          releaseYear = movie.releaseDate.substring(0, 4);
+        } else if (movie.releaseYear) {
+          releaseYear = String(movie.releaseYear);
+        } else if (movie.year) {
+          releaseYear = String(movie.year);
+        }
+        const yearEl = document.getElementById('detailYear');
+        if (yearEl) yearEl.innerHTML = `<i class="bi bi-calendar-event text-white/50"></i> ${releaseYear}`;
+
+        // Poster and backdrop
+        const posterImg = document.getElementById('detailPosterImg');
+        if (posterImg) {
+          posterImg.src = getValidPosterUrl(movie.posterUrl);
+          posterImg.alt = safeTitle;
+        }
+
+        const backdropEl = document.getElementById('detailsBackdrop');
+        if (backdropEl) {
+          const validBackdrop = getValidPosterUrl(movie.backdropUrl);
+          if (validBackdrop && validBackdrop !== POSTER_FALLBACK_SVG) {
+            backdropEl.style.backgroundImage = `url('${validBackdrop}')`;
+          } else if (movie.posterUrl && movie.posterUrl !== POSTER_FALLBACK_SVG) {
+            backdropEl.style.backgroundImage = `url('${movie.posterUrl}')`;
+          }
+        }
+
+        // Genre badges
+        const genreContainer = document.getElementById('detailGenreBadges');
+        if (genreContainer) {
+          if (movie.genre) {
+            genreContainer.innerHTML = movie.genre.split(',').map(g => {
+              const trimmed = g.trim();
+              return `<a href="movies.html?genre=${encodeURIComponent(trimmed)}" class="genre-filter-pill">${escapeHtml(trimmed)}</a>`;
+            }).join('');
+          } else {
+            genreContainer.innerHTML = `<span class="genre-filter-pill">General</span>`;
+          }
+        }
+
+        // Favourites button state
+        const favBtn = document.getElementById('detailsFavBtn');
+        if (favBtn) {
+          favBtn.dataset.movieId = movie.id;
+          if (Favourites.isFav(movie.id)) {
+            favBtn.className = "btn btn-danger px-6 py-3 rounded-xl text-sm font-bold flex items-center gap-2 bg-[#e50914]";
+            favBtn.innerHTML = `<i class="bi bi-heart-fill"></i> In Favourites`;
+          } else {
+            favBtn.className = "btn-mv-secondary px-6 py-3 rounded-xl text-sm font-semibold flex items-center gap-2";
+            favBtn.innerHTML = `<i class="bi bi-heart"></i> Add to Favourite`;
+          }
+        }
+
+        // Trailer iframe setup
+        setupTrailer(movie);
+
+        // Load recommended movies from same primary genre
+        loadRelatedMovies(movie);
+
+      } catch (err) {
+        console.error('Error fetching movie details:', err);
+        showErrorState("Unable to load movie details. Please try again.");
+      }
+    }
+
+    function setupTrailer(movie) {
+      const trailerIframe = document.getElementById('trailerIframe');
+      const trailerFallback = document.getElementById('trailerFallbackMessage');
+      const trailerModalEl = document.getElementById('trailerModal');
+
+      if (movie.trailerUrl && movie.trailerUrl.trim() !== "") {
+        if (trailerIframe) trailerIframe.classList.remove('hidden');
+        if (trailerFallback) trailerFallback.classList.add('hidden');
+        
+        trailerModalEl.addEventListener('show.bs.modal', () => {
+          let embedUrl = movie.trailerUrl;
+          if (embedUrl.includes('?')) {
+            embedUrl += '&autoplay=1';
+          } else {
+            embedUrl += '?autoplay=1';
+          }
+          trailerIframe.src = embedUrl;
+        });
+
+        trailerModalEl.addEventListener('hidden.bs.modal', () => {
+          trailerIframe.src = '';
+        });
+      } else {
+        if (trailerIframe) trailerIframe.classList.add('hidden');
+        if (trailerFallback) trailerFallback.classList.remove('hidden');
+      }
+    }
+
+    function toggleDetailsFavourite() {
+      if (currentMovie) {
+        Favourites.toggle(currentMovie.id);
+      }
+    }
+
+    async function loadRelatedMovies(currentMovie) {
+      const container = document.getElementById('relatedMoviesContainer');
+      if (!container) return;
+      container.innerHTML = createSkeletonCardsHtml(5);
+
+      try {
+        const firstGenre = currentMovie.genre ? currentMovie.genre.split(',')[0].trim() : '';
+        const res = await fetch(`/api/movies`);
+        const all = await res.json();
+        
+        // Filter by same genre or high rating, excluding current
+        let related = all.filter(m => m.id !== currentMovie.id);
+        if (firstGenre) {
+          const sameGenre = related.filter(m => m.genre && m.genre.includes(firstGenre));
+          if (sameGenre.length >= 3) {
+            related = sameGenre;
+          }
+        }
+        
+        container.innerHTML = related.slice(0, 5).map(m => createMovieCardHtml(m)).join('');
+      } catch (e) {
+        console.warn("Could not fetch related movies:", e);
+      }
+    }
+
+    function showNotFoundState(message) {
+      document.title = "Movie Not Found - MovieVerse";
+      document.getElementById('detailsMainContainer').innerHTML = `
+        <div class="max-w-2xl mx-auto px-4 py-20 text-center">
+          <div class="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-6 text-[#e50914] text-4xl">
+            <i class="bi bi-film"></i>
+          </div>
+          <h2 class="text-3xl font-black font-display text-white mb-3">Movie Not Found</h2>
+          <p class="text-white/60 text-base mb-8 max-w-md mx-auto">${escapeHtml(message)}</p>
+          <a href="movies.html" class="btn-mv-primary px-6 py-3 rounded-xl text-sm font-semibold inline-flex items-center gap-2">
+            <i class="bi bi-arrow-left"></i> Back to Movie Catalog
+          </a>
+        </div>
+      `;
+    }
+
+    function showErrorState(message) {
+      document.title = "Error - MovieVerse";
+      document.getElementById('detailsMainContainer').innerHTML = `
+        <div class="max-w-2xl mx-auto px-4 py-20 text-center">
+          <div class="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-6 text-[#e50914] text-4xl">
+            <i class="bi bi-exclamation-triangle"></i>
+          </div>
+          <h2 class="text-3xl font-black font-display text-white mb-3">Unable to Load Movie</h2>
+          <p class="text-white/60 text-base mb-8 max-w-md mx-auto">${escapeHtml(message)}</p>
+          <button onclick="location.reload()" class="btn-mv-primary px-6 py-3 rounded-xl text-sm font-semibold inline-flex items-center gap-2">
+            <i class="bi bi-arrow-clockwise"></i> Try Again
+          </button>
+        </div>
+      `;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadMovieDetails();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MovieVerse - Discover. Explore. Enjoy.</title>
+  <meta name="description" content="MovieVerse is a modern full-stack movie discovery platform with dark cinematic UI, powered by Spring Boot REST API.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            mv: {
+              bg: '#050505',
+              secondary: '#0f0f0f',
+              card: '#171717',
+              cardHover: '#212121',
+              accent: '#e50914',
+              accentHover: '#ff2633',
+              textPrimary: '#ffffff',
+              textSecondary: '#a3a3a3',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Poppins', 'Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Bootstrap 5 CSS (for dropdown & modal compatibility) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Custom MovieVerse CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-[#050505] text-white min-h-screen font-sans flex flex-col selection:bg-[#e50914] selection:text-white">
+
+  <!-- Sticky Navbar -->
+  <header class="sticky top-0 z-50 bg-[#050505]/90 backdrop-blur-xl border-b border-white/10" id="mainNavbar">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 md:h-20 gap-4">
+        
+        <!-- Logo Brand -->
+        <a href="index.html" class="flex items-center gap-2 text-xl md:text-2xl font-black font-display tracking-wider text-white shrink-0 group">
+          <div class="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-[#e50914] flex items-center justify-center text-white shadow-lg shadow-[#e50914]/30 group-hover:scale-105 transition-transform">
+            <i class="bi bi-film text-base md:text-lg"></i>
+          </div>
+          <span><span class="text-[#e50914]">MOVIE</span><span class="text-white">VERSE</span></span>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden lg:flex items-center gap-1 xl:gap-2">
+          <a href="index.html" class="nav-link-custom active font-medium text-sm">
+            <i class="bi bi-house-door me-1.5"></i>Home
+          </a>
+          <a href="movies.html" class="nav-link-custom font-medium text-sm">
+            <i class="bi bi-collection-play me-1.5"></i>Movies
+          </a>
+          <a href="favourites.html" class="nav-link-custom font-medium text-sm">
+            <i class="bi bi-heart me-1.5"></i>Favourites
+          </a>
+          <a href="about.html" class="nav-link-custom font-medium text-sm">
+            <i class="bi bi-info-circle me-1.5"></i>About
+          </a>
+          <a href="architecture.html" class="nav-link-custom font-medium text-sm text-amber-400/90 hover:text-amber-400">
+            <i class="bi bi-cpu me-1.5"></i>Java Architecture
+          </a>
+        </nav>
+
+        <!-- Search Bar (Desktop/Tablet) -->
+        <form class="hidden sm:flex items-center flex-1 max-w-xs md:max-w-sm relative" id="navSearchForm">
+          <input type="search" 
+                 id="navSearchInput"
+                 placeholder="Search movies, cast, director..." 
+                 class="w-full bg-[#171717] border border-white/15 text-white placeholder-white/40 text-sm rounded-full pl-9 pr-10 py-2 focus:outline-none focus:border-[#e50914] focus:ring-1 focus:ring-[#e50914] transition-all">
+          <i class="bi bi-search absolute left-3 text-white/40 text-xs"></i>
+          <button type="submit" class="absolute right-2.5 text-white/40 hover:text-white transition-colors text-xs p-1" aria-label="Search">
+            <i class="bi bi-arrow-right"></i>
+          </button>
+        </form>
+
+        <!-- Auth Section & Mobile Hamburger -->
+        <div class="flex items-center gap-3">
+          <div id="navbarAuthSection" class="hidden sm:block">
+            <!-- Dynamic User or Login/Register buttons injected by app.js -->
+          </div>
+
+          <!-- Mobile Hamburger Toggle -->
+          <button type="button" 
+                  id="mobileMenuToggle"
+                  class="lg:hidden p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 focus:outline-none"
+                  aria-label="Toggle menu">
+            <i class="bi bi-list text-2xl" id="menuIcon"></i>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Mobile Dropdown Menu -->
+      <div id="mobileMenu" class="hidden lg:hidden border-t border-white/10 py-4 px-2 space-y-2 animate-fade-in">
+        <!-- Mobile Search Form -->
+        <form class="sm:hidden relative mb-4" id="mobileNavSearchForm">
+          <input type="search" 
+                 placeholder="Search movies..." 
+                 class="w-full bg-[#171717] border border-white/15 text-white placeholder-white/40 text-sm rounded-lg pl-9 pr-4 py-2.5 focus:outline-none focus:border-[#e50914]">
+          <i class="bi bi-search absolute left-3 top-3 text-white/40 text-sm"></i>
+        </form>
+
+        <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-white font-medium bg-white/5">
+          <i class="bi bi-house-door text-[#e50914]"></i> Home
+        </a>
+        <a href="movies.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 font-medium">
+          <i class="bi bi-collection-play text-white/60"></i> Movies
+        </a>
+        <a href="favourites.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 font-medium">
+          <i class="bi bi-heart text-[#e50914]"></i> Favourites
+        </a>
+        <a href="about.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 font-medium">
+          <i class="bi bi-info-circle text-white/60"></i> About
+        </a>
+        <a href="architecture.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-amber-400/90 hover:text-amber-400 hover:bg-white/5 font-medium">
+          <i class="bi bi-cpu"></i> Java Architecture
+        </a>
+
+        <div id="mobileNavbarAuthSection" class="pt-3 border-t border-white/10 sm:hidden">
+          <!-- Injected by app.js -->
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-grow">
+    
+    <!-- Hero Spotlight Section (Dynamic Carousel) -->
+    <section class="relative min-h-[540px] md:min-h-[640px] flex items-center overflow-hidden bg-[#0a0a0a] group/hero" id="heroSection">
+      <!-- Background Backdrop with Dark Gradient Overlay -->
+      <div id="heroBackdrop" 
+           class="absolute inset-0 bg-cover bg-center transition-all duration-1000 opacity-60 scale-105"
+           style="background-image: url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1920&q=80');">
+      </div>
+      
+      <!-- Gradient Overlays for Cinematic Contrast -->
+      <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/70 to-transparent"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-[#050505] via-[#050505]/85 to-transparent hidden md:block"></div>
+
+      <!-- Hero Carousel Navigation Arrows -->
+      <button id="heroPrevBtn" 
+              class="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-black/50 hover:bg-[#e50914] text-white/80 hover:text-white border border-white/15 items-center justify-center backdrop-blur-md transition-all shadow-xl hover:scale-110 focus:outline-none"
+              aria-label="Previous Featured Movie">
+        <i class="bi bi-chevron-left text-lg"></i>
+      </button>
+      <button id="heroNextBtn" 
+              class="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-black/50 hover:bg-[#e50914] text-white/80 hover:text-white border border-white/15 items-center justify-center backdrop-blur-md transition-all shadow-xl hover:scale-110 focus:outline-none"
+              aria-label="Next Featured Movie">
+        <i class="bi bi-chevron-right text-lg"></i>
+      </button>
+
+      <!-- Hero Content -->
+      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 z-10 w-full">
+        <div class="max-w-2xl">
+          
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e50914]/20 border border-[#e50914]/40 text-[#e50914] text-xs font-semibold uppercase tracking-wider mb-4 animate-fade-in">
+            <i class="bi bi-stars"></i>
+            <span>Featured Spotlight</span>
+          </div>
+
+          <h1 id="heroTitle" class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black font-display text-white tracking-tight leading-tight mb-4 drop-shadow-md transition-all duration-300">
+            Avengers: Endgame
+          </h1>
+
+          <!-- Meta Pills -->
+          <div class="flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm text-white/70 mb-4" id="heroMeta">
+            <span class="inline-flex items-center gap-1 text-amber-400 font-bold bg-black/60 px-2.5 py-1 rounded-md border border-white/10">
+              <i class="bi bi-star-fill"></i> <span id="heroRating">8.4</span>
+            </span>
+            <span class="text-white/40">•</span>
+            <span id="heroYear" class="font-medium text-white/90">2019</span>
+            <span class="text-white/40">•</span>
+            <span id="heroDuration" class="font-medium text-white/90">181 min</span>
+            <span class="text-white/40">•</span>
+            <span id="heroGenre" class="bg-white/10 px-2.5 py-1 rounded-md text-white/80 font-medium">Action, Adventure, Drama</span>
+          </div>
+
+          <p id="heroDescription" class="text-white/75 text-sm sm:text-base leading-relaxed mb-8 line-clamp-3 md:line-clamp-4 max-w-xl transition-all duration-300">
+            After the devastating events of Avengers: Infinity War, the universe is in ruins. With the help of remaining allies, the Avengers assemble once more in order to reverse Thanos' actions and restore balance to the universe.
+          </p>
+
+          <!-- Hero Buttons -->
+          <div class="flex flex-wrap items-center gap-3 sm:gap-4">
+            <button id="heroTrailerBtn" class="btn-mv-primary px-5 py-3 rounded-xl text-sm font-bold flex items-center gap-2 shadow-lg shadow-[#e50914]/30" data-bs-toggle="modal" data-bs-target="#trailerModal">
+              <i class="bi bi-play-circle-fill text-lg"></i> Watch Trailer
+            </button>
+            <button id="heroFavBtn" class="btn-mv-secondary px-5 py-3 rounded-xl text-sm font-semibold flex items-center gap-2">
+              <i class="bi bi-heart text-base"></i> <span id="heroFavBtnText">Add to Favourite</span>
+            </button>
+            <a id="heroDetailsLink" href="movie-details.html?id=1" class="px-5 py-3 rounded-xl text-sm font-semibold text-white/80 hover:text-white hover:bg-white/10 transition-colors border border-white/10 flex items-center gap-2">
+              <i class="bi bi-info-circle"></i> Details
+            </a>
+          </div>
+
+          <!-- Hero Carousel Indicators -->
+          <div class="flex items-center gap-2 mt-8" id="heroCarouselIndicators">
+            <!-- Injected by script -->
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Content Sections Wrapper -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16 space-y-12 md:space-y-16">
+      
+      <!-- Section 1: 🔥 Trending Movies -->
+      <section id="trendingSection">
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center gap-3">
+            <div class="w-1.5 h-6 bg-[#e50914] rounded-full"></div>
+            <h2 class="text-xl sm:text-2xl font-bold font-display text-white flex items-center gap-2">
+              <span>🔥 Trending Movies</span>
+            </h2>
+          </div>
+          <a href="movies.html" class="text-sm font-semibold text-white/60 hover:text-[#e50914] transition-colors flex items-center gap-1 group">
+            View All <i class="bi bi-arrow-right group-hover:translate-x-1 transition-transform"></i>
+          </a>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6" id="trendingMoviesContainer">
+          <!-- Skeletons injected by script -->
+        </div>
+      </section>
+
+      <!-- Section 2: ⭐ Popular Movies (Top Rated) -->
+      <section id="popularSection">
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center gap-3">
+            <div class="w-1.5 h-6 bg-amber-400 rounded-full"></div>
+            <h2 class="text-xl sm:text-2xl font-bold font-display text-white flex items-center gap-2">
+              <span>⭐ Top Rated Classics</span>
+            </h2>
+          </div>
+          <a href="movies.html?sort=rating" class="text-sm font-semibold text-white/60 hover:text-[#e50914] transition-colors flex items-center gap-1 group">
+            View All <i class="bi bi-arrow-right group-hover:translate-x-1 transition-transform"></i>
+          </a>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6" id="popularMoviesContainer">
+          <!-- Skeletons injected by script -->
+        </div>
+      </section>
+
+      <!-- Section 3: 🆕 Latest Releases -->
+      <section id="latestSection">
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center gap-3">
+            <div class="w-1.5 h-6 bg-sky-400 rounded-full"></div>
+            <h2 class="text-xl sm:text-2xl font-bold font-display text-white flex items-center gap-2">
+              <span>🆕 Latest Releases</span>
+            </h2>
+          </div>
+          <a href="movies.html?sort=date" class="text-sm font-semibold text-white/60 hover:text-[#e50914] transition-colors flex items-center gap-1 group">
+            View All <i class="bi bi-arrow-right group-hover:translate-x-1 transition-transform"></i>
+          </a>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6" id="latestMoviesContainer">
+          <!-- Skeletons injected by script -->
+        </div>
+      </section>
+
+      <!-- CTA Banner: Join MovieVerse -->
+      <section class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#171717] to-[#250d0f] border border-[#e50914]/30 p-8 md:p-12 shadow-2xl">
+        <div class="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+          <div class="max-w-2xl">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e50914]/20 border border-[#e50914]/40 text-[#e50914] text-xs font-bold uppercase tracking-wider mb-3">
+              <i class="bi bi-heart-fill"></i> Free Personal Watchlist
+            </div>
+            <h3 class="text-2xl sm:text-3xl font-bold font-display text-white mb-2">
+              Save Your Favourite Movies & Curate Your Watchlist
+            </h3>
+            <p class="text-white/70 text-sm sm:text-base leading-relaxed">
+              Create an account in seconds to bookmark timeless classics, sync your favourites across devices, and discover new cinematic gems.
+            </p>
+          </div>
+          <div class="shrink-0 flex items-center gap-3">
+            <a href="register.html" class="btn-mv-primary px-6 py-3.5 rounded-xl text-sm font-bold shadow-lg shadow-[#e50914]/30">
+              <i class="bi bi-person-plus-fill me-2"></i> Get Started Free
+            </a>
+            <a href="movies.html" class="btn-mv-secondary px-6 py-3.5 rounded-xl text-sm font-semibold">
+              Explore Catalog
+            </a>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Trailer Modal -->
+  <div class="modal fade" id="trailerModal" tabindex="-1" aria-labelledby="trailerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content bg-[#171717] text-white border border-white/15 rounded-2xl overflow-hidden shadow-2xl">
+        <div class="modal-header border-b border-white/10 px-5 py-4">
+          <h5 class="modal-title flex items-center gap-2 text-base font-bold" id="trailerModalLabel">
+            <i class="bi bi-play-circle-fill text-[#e50914] text-lg"></i>
+            <span>Official Movie Trailer - <span id="trailerModalTitle" class="text-white"></span></span>
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-0 bg-black">
+          <div class="ratio ratio-16x9">
+            <iframe id="trailerIframe" src="" title="Movie Trailer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="border:0;"></iframe>
+          </div>
+        </div>
+        <div class="modal-footer border-t border-white/10 px-5 py-3 justify-between">
+          <span class="text-xs text-white/50"><i class="bi bi-info-circle me-1"></i>Official trailer stream provided for discovery purposes</span>
+          <button type="button" class="btn-mv-secondary px-4 py-1.5 text-xs rounded-lg" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-[#0a0a0a] border-t border-white/10 pt-12 pb-8 mt-auto text-sm text-white/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
+        
+        <div class="lg:col-span-2 space-y-4">
+          <a href="index.html" class="flex items-center gap-2 text-xl font-bold font-display text-white">
+            <div class="w-7 h-7 rounded-lg bg-[#e50914] flex items-center justify-center text-white text-sm">
+              <i class="bi bi-film"></i>
+            </div>
+            <span><span class="text-[#e50914]">MOVIE</span><span class="text-white">VERSE</span></span>
+          </a>
+          <p class="text-xs sm:text-sm text-white/50 leading-relaxed max-w-sm">
+            "Discover. Explore. Enjoy."<br>
+            Your comprehensive movie discovery platform engineered with modern Java Spring Boot, MySQL, and Tailwind CSS responsive architecture.
+          </p>
+          <div class="flex items-center gap-2 text-white/70">
+            <span class="w-8 h-8 rounded-lg bg-white/5 hover:bg-[#e50914] hover:text-white flex items-center justify-center transition-colors cursor-pointer"><i class="bi bi-github"></i></span>
+            <span class="w-8 h-8 rounded-lg bg-white/5 hover:bg-[#e50914] hover:text-white flex items-center justify-center transition-colors cursor-pointer"><i class="bi bi-twitter-x"></i></span>
+            <span class="w-8 h-8 rounded-lg bg-white/5 hover:bg-[#e50914] hover:text-white flex items-center justify-center transition-colors cursor-pointer"><i class="bi bi-youtube"></i></span>
+            <span class="w-8 h-8 rounded-lg bg-white/5 hover:bg-[#e50914] hover:text-white flex items-center justify-center transition-colors cursor-pointer"><i class="bi bi-linkedin"></i></span>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-white font-semibold text-xs uppercase tracking-wider mb-3 font-display">Navigation</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="index.html" class="hover:text-white transition-colors">Home</a></li>
+            <li><a href="movies.html" class="hover:text-white transition-colors">Browse Movies</a></li>
+            <li><a href="movies.html?sort=rating" class="hover:text-white transition-colors">Top Rated</a></li>
+            <li><a href="favourites.html" class="hover:text-white transition-colors">My Favourites</a></li>
+            <li><a href="about.html" class="hover:text-white transition-colors">About Us</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-white font-semibold text-xs uppercase tracking-wider mb-3 font-display">Popular Genres</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="movies.html?genre=Action" class="hover:text-white transition-colors">Action</a></li>
+            <li><a href="movies.html?genre=Sci-Fi" class="hover:text-white transition-colors">Sci-Fi</a></li>
+            <li><a href="movies.html?genre=Drama" class="hover:text-white transition-colors">Drama</a></li>
+            <li><a href="movies.html?genre=Comedy" class="hover:text-white transition-colors">Comedy</a></li>
+            <li><a href="movies.html?genre=Horror" class="hover:text-white transition-colors">Horror</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-white font-semibold text-xs uppercase tracking-wider mb-3 font-display">Tech Stack</h4>
+          <div class="flex flex-wrap gap-1.5 mb-3">
+            <span class="px-2 py-0.5 rounded bg-white/5 text-[11px] text-white/70">Java 17/21</span>
+            <span class="px-2 py-0.5 rounded bg-white/5 text-[11px] text-white/70">Spring Boot 3</span>
+            <span class="px-2 py-0.5 rounded bg-white/5 text-[11px] text-white/70">MySQL</span>
+            <span class="px-2 py-0.5 rounded bg-white/5 text-[11px] text-[#e50914] font-medium">Tailwind CSS</span>
+            <span class="px-2 py-0.5 rounded bg-white/5 text-[11px] text-white/70">REST APIs</span>
+          </div>
+          <a href="architecture.html" class="text-xs text-amber-400 hover:underline flex items-center gap-1 font-medium">
+            <i class="bi bi-cpu"></i> View Architecture Guide →
+          </a>
+        </div>
+
+      </div>
+
+      <div class="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/40">
+        <p>© 2026 MovieVerse. All rights reserved. Full-stack Java & Tailwind platform.</p>
+        <div class="flex items-center gap-4">
+          <a href="about.html" class="hover:text-white transition-colors">About</a>
+          <a href="architecture.html" class="hover:text-white transition-colors">Architecture</a>
+          <a href="movies.html" class="hover:text-white transition-colors">Explore</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- MovieVerse App Engine JS -->
+  <script src="js/app.js"></script>
+
+  <!-- Page Specific Logic -->
+  <script>
+    let heroMovies = [];
+    let currentHeroIndex = 0;
+    let heroAutoRotateTimer = null;
+    let isHeroHovered = false;
+
+    // Mobile Hamburger Menu Toggle
+    const mobileToggle = document.getElementById('mobileMenuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (mobileToggle && mobileMenu) {
+      mobileToggle.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+        const icon = document.getElementById('menuIcon');
+        if (mobileMenu.classList.contains('hidden')) {
+          icon.className = 'bi bi-list text-2xl';
+        } else {
+          icon.className = 'bi bi-x-lg text-2xl';
+        }
+      });
+    }
+
+    async function loadHomePageData() {
+      // Show skeletons initially
+      const trendingContainer = document.getElementById('trendingMoviesContainer');
+      const popularContainer = document.getElementById('popularMoviesContainer');
+      const latestContainer = document.getElementById('latestMoviesContainer');
+
+      if (trendingContainer) trendingContainer.innerHTML = createSkeletonCardsHtml(5);
+      if (popularContainer) popularContainer.innerHTML = createSkeletonCardsHtml(5);
+      if (latestContainer) latestContainer.innerHTML = createSkeletonCardsHtml(5);
+
+      try {
+        const res = await fetch('/api/movies');
+        if (!res.ok) throw new Error('API fetch error');
+        const allMovies = await res.json();
+
+        if (allMovies && allMovies.length > 0) {
+          // 1. Featured Spotlight Carousel in Hero (Top 5 spotlight movies)
+          heroMovies = allMovies.slice(0, 5);
+          currentHeroIndex = 0;
+          renderHeroCarousel(currentHeroIndex);
+          startHeroCarouselTimer();
+
+          // Hero Next & Prev Buttons
+          const prevBtn = document.getElementById('heroPrevBtn');
+          const nextBtn = document.getElementById('heroNextBtn');
+          if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+              currentHeroIndex = (currentHeroIndex - 1 + heroMovies.length) % heroMovies.length;
+              renderHeroCarousel(currentHeroIndex);
+              resetHeroCarouselTimer();
+            });
+          }
+          if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+              currentHeroIndex = (currentHeroIndex + 1) % heroMovies.length;
+              renderHeroCarousel(currentHeroIndex);
+              resetHeroCarouselTimer();
+            });
+          }
+
+          // Pause rotation on hero hover
+          const heroSection = document.getElementById('heroSection');
+          if (heroSection) {
+            heroSection.addEventListener('mouseenter', () => { isHeroHovered = true; });
+            heroSection.addEventListener('mouseleave', () => { isHeroHovered = false; });
+          }
+
+          // 2. Trending Movies
+          const trendingMovies = allMovies.filter(m => m.isTrending).slice(0, 5);
+          if (trendingContainer) {
+            trendingContainer.innerHTML = (trendingMovies.length > 0 ? trendingMovies : allMovies.slice(0, 5)).map(m => createMovieCardHtml(m)).join('');
+          }
+
+          // 3. Popular Movies (sorted by rating)
+          const popularMovies = [...allMovies].sort((a, b) => b.rating - a.rating).slice(0, 5);
+          if (popularContainer) {
+            popularContainer.innerHTML = popularMovies.map(m => createMovieCardHtml(m)).join('');
+          }
+
+          // 4. Latest Movies (sorted by release date)
+          const latestMovies = [...allMovies].sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate)).slice(0, 5);
+          if (latestContainer) {
+            latestContainer.innerHTML = latestMovies.map(m => createMovieCardHtml(m)).join('');
+          }
+        }
+      } catch (err) {
+        console.error('Error loading home page movies:', err);
+        Toast.show('Error loading movie catalogs from server', 'danger');
+      }
+    }
+
+    function renderHeroCarousel(index) {
+      if (!heroMovies || heroMovies.length === 0) return;
+      const movie = heroMovies[index];
+      if (!movie) return;
+
+      const heroBackdrop = document.getElementById('heroBackdrop');
+      const heroTitle = document.getElementById('heroTitle');
+      const heroRating = document.getElementById('heroRating');
+      const heroYear = document.getElementById('heroYear');
+      const heroDuration = document.getElementById('heroDuration');
+      const heroGenre = document.getElementById('heroGenre');
+      const heroDescription = document.getElementById('heroDescription');
+      const heroDetailsLink = document.getElementById('heroDetailsLink');
+      const heroFavBtn = document.getElementById('heroFavBtn');
+      const heroFavBtnText = document.getElementById('heroFavBtnText');
+      const trailerModalTitle = document.getElementById('trailerModalTitle');
+      const indicatorsContainer = document.getElementById('heroCarouselIndicators');
+
+      if (movie.backdropUrl && movie.backdropUrl !== POSTER_FALLBACK_SVG) {
+        heroBackdrop.style.backgroundImage = `url('${movie.backdropUrl}')`;
+      } else if (movie.posterUrl && movie.posterUrl !== POSTER_FALLBACK_SVG) {
+        heroBackdrop.style.backgroundImage = `url('${movie.posterUrl}')`;
+      }
+      
+      heroTitle.textContent = movie.title;
+      heroRating.textContent = typeof movie.rating === 'number' ? movie.rating.toFixed(1) : (movie.rating || 'N/A');
+      
+      const year = movie.releaseDate && movie.releaseDate.length >= 4 ? movie.releaseDate.substring(0, 4) : '2024';
+      heroYear.textContent = year;
+      heroDuration.textContent = movie.duration ? (typeof movie.duration === 'number' ? `${movie.duration} min` : movie.duration) : '120 min';
+      heroGenre.textContent = movie.genre || 'Action, Adventure';
+      heroDescription.textContent = movie.description || 'Watch now on MovieVerse.';
+      heroDetailsLink.href = `movie-details.html?id=${movie.id}`;
+      trailerModalTitle.textContent = movie.title;
+
+      // Update indicators
+      if (indicatorsContainer) {
+        indicatorsContainer.innerHTML = heroMovies.map((m, i) => `
+          <button type="button" 
+                  class="h-2 rounded-full transition-all ${i === index ? 'w-8 bg-[#e50914]' : 'w-2 bg-white/30 hover:bg-white/60'}" 
+                  onclick="selectHeroSlide(${i})" 
+                  title="${escapeHtml(m.title)}" 
+                  aria-label="Go to slide ${i + 1}">
+          </button>
+        `).join('');
+      }
+
+      // Update hero favourite button state
+      const isFav = Favourites.isFav(movie.id);
+      if (isFav) {
+        heroFavBtn.className = "btn-mv-primary px-5 py-3 rounded-xl text-sm font-semibold flex items-center gap-2 bg-[#e50914]";
+        heroFavBtn.innerHTML = `<i class="bi bi-heart-fill text-white"></i> <span>In Favourites</span>`;
+      } else {
+        heroFavBtn.className = "btn-mv-secondary px-5 py-3 rounded-xl text-sm font-semibold flex items-center gap-2";
+        heroFavBtn.innerHTML = `<i class="bi bi-heart"></i> <span>Add to Favourite</span>`;
+      }
+
+      heroFavBtn.onclick = (e) => {
+        Favourites.toggle(movie.id, e);
+        setTimeout(() => {
+          const nowFav = Favourites.isFav(movie.id);
+          if (nowFav) {
+            heroFavBtn.className = "btn-mv-primary px-5 py-3 rounded-xl text-sm font-semibold flex items-center gap-2 bg-[#e50914]";
+            heroFavBtn.innerHTML = `<i class="bi bi-heart-fill text-white"></i> <span>In Favourites</span>`;
+          } else {
+            heroFavBtn.className = "btn-mv-secondary px-5 py-3 rounded-xl text-sm font-semibold flex items-center gap-2";
+            heroFavBtn.innerHTML = `<i class="bi bi-heart"></i> <span>Add to Favourite</span>`;
+          }
+        }, 100);
+      };
+
+      // Trailer modal autoplay handling
+      const trailerModal = document.getElementById('trailerModal');
+      const trailerIframe = document.getElementById('trailerIframe');
+      if (trailerModal && trailerIframe) {
+        trailerModal.addEventListener('show.bs.modal', () => {
+          let embed = movie.trailerUrl || "https://www.youtube-nocookie.com/embed/TcMBFSGVi1c";
+          if (embed.includes('?')) {
+            embed += '&autoplay=1';
+          } else {
+            embed += '?autoplay=1';
+          }
+          trailerIframe.src = embed;
+        });
+        trailerModal.addEventListener('hidden.bs.modal', () => {
+          trailerIframe.src = '';
+        });
+      }
+    }
+
+    function selectHeroSlide(idx) {
+      currentHeroIndex = idx;
+      renderHeroCarousel(currentHeroIndex);
+      resetHeroCarouselTimer();
+    }
+
+    function startHeroCarouselTimer() {
+      if (heroAutoRotateTimer) clearInterval(heroAutoRotateTimer);
+      heroAutoRotateTimer = setInterval(() => {
+        if (!isHeroHovered && heroMovies.length > 1) {
+          currentHeroIndex = (currentHeroIndex + 1) % heroMovies.length;
+          renderHeroCarousel(currentHeroIndex);
+        }
+      }, 6000);
+    }
+
+    function resetHeroCarouselTimer() {
+      startHeroCarouselTimer();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadHomePageData();
+    });
+  </script>
+</body>
+</html>

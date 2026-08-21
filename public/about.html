@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - MovieVerse</title>
+  <meta name="description" content="Learn about MovieVerse architecture, technology stack, mission, and developer portfolio details.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            mv: {
+              bg: '#050505',
+              secondary: '#0f0f0f',
+              card: '#171717',
+              cardHover: '#212121',
+              accent: '#e50914',
+              accentHover: '#ff2633',
+              textPrimary: '#ffffff',
+              textSecondary: '#a3a3a3',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Poppins', 'Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Custom MovieVerse CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-[#050505] text-white min-h-screen font-sans flex flex-col selection:bg-[#e50914] selection:text-white">
+
+  <!-- Sticky Navbar -->
+  <header class="sticky top-0 z-50 bg-[#050505]/90 backdrop-blur-xl border-b border-white/10" id="mainNavbar">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 md:h-20 gap-4">
+        
+        <!-- Logo Brand -->
+        <a href="index.html" class="flex items-center gap-2 text-xl md:text-2xl font-black font-display tracking-wider text-white shrink-0 group">
+          <div class="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-[#e50914] flex items-center justify-center text-white shadow-lg shadow-[#e50914]/30 group-hover:scale-105 transition-transform">
+            <i class="bi bi-film text-base md:text-lg"></i>
+          </div>
+          <span><span class="text-[#e50914]">MOVIE</span><span class="text-white">VERSE</span></span>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden lg:flex items-center gap-1 xl:gap-2">
+          <a href="index.html" class="nav-link-custom font-medium text-sm">
+            <i class="bi bi-house-door me-1.5"></i>Home
+          </a>
+          <a href="movies.html" class="nav-link-custom font-medium text-sm">
+            <i class="bi bi-collection-play me-1.5"></i>Movies
+          </a>
+          <a href="favourites.html" class="nav-link-custom font-medium text-sm">
+            <i class="bi bi-heart me-1.5"></i>Favourites
+          </a>
+          <a href="about.html" class="nav-link-custom active font-medium text-sm">
+            <i class="bi bi-info-circle me-1.5"></i>About
+          </a>
+          <a href="architecture.html" class="nav-link-custom font-medium text-sm text-amber-400/90 hover:text-amber-400">
+            <i class="bi bi-cpu me-1.5"></i>Java Architecture
+          </a>
+        </nav>
+
+        <!-- Auth Section & Mobile Hamburger -->
+        <div class="flex items-center gap-3">
+          <div id="navbarAuthSection" class="hidden sm:block"></div>
+
+          <button type="button" 
+                  id="mobileMenuToggle"
+                  class="lg:hidden p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 focus:outline-none"
+                  aria-label="Toggle menu">
+            <i class="bi bi-list text-2xl" id="menuIcon"></i>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Mobile Dropdown Menu -->
+      <div id="mobileMenu" class="hidden lg:hidden border-t border-white/10 py-4 px-2 space-y-2 animate-fade-in">
+        <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 font-medium">
+          <i class="bi bi-house-door text-white/60"></i> Home
+        </a>
+        <a href="movies.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 font-medium">
+          <i class="bi bi-collection-play text-white/60"></i> Movies
+        </a>
+        <a href="favourites.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 font-medium">
+          <i class="bi bi-heart text-[#e50914]"></i> Favourites
+        </a>
+        <a href="about.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-white font-medium bg-white/5">
+          <i class="bi bi-info-circle text-[#e50914]"></i> About
+        </a>
+        <a href="architecture.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-amber-400/90 hover:text-amber-400 hover:bg-white/5 font-medium">
+          <i class="bi bi-cpu"></i> Java Architecture
+        </a>
+        <div id="mobileNavbarAuthSection" class="pt-3 border-t border-white/10 sm:hidden"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-grow py-12 md:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 md:space-y-16">
+      
+      <!-- Hero Intro Banner -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-7 space-y-4">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e50914]/15 border border-[#e50914]/30 text-[#e50914] text-xs font-bold uppercase tracking-wider">
+            <i class="bi bi-info-circle-fill"></i> About MovieVerse
+          </div>
+          <h1 class="text-3xl sm:text-5xl font-black font-display text-white tracking-tight leading-tight">
+            Discover. Explore. Enjoy.
+          </h1>
+          <p class="text-white/70 text-base sm:text-lg leading-relaxed max-w-xl">
+            MovieVerse is a modern full-stack movie discovery platform designed to help cinema enthusiasts explore movies, search across genres, and maintain a personalized list of favourite movies.
+          </p>
+          <div class="flex flex-wrap gap-3 pt-2">
+            <a href="movies.html" class="btn-mv-primary px-6 py-3 rounded-xl text-sm font-bold shadow-lg shadow-[#e50914]/25">
+              <i class="bi bi-play-circle me-1.5"></i> Explore Catalog
+            </a>
+            <a href="architecture.html" class="btn-mv-secondary px-6 py-3 rounded-xl text-sm font-semibold">
+              <i class="bi bi-cpu me-1.5"></i> View Java Architecture
+            </a>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5">
+          <div class="p-8 rounded-2xl bg-[#171717] border border-white/10 shadow-2xl text-center relative overflow-hidden">
+            <div class="w-20 h-20 rounded-2xl bg-[#e50914]/15 border border-[#e50914]/30 flex items-center justify-center mx-auto mb-4 text-[#e50914] text-3xl shadow-lg">
+              <i class="bi bi-camera-reels-fill"></i>
+            </div>
+            <h3 class="text-xl font-bold font-display text-white mb-2">Full-Stack Java + Tailwind</h3>
+            <p class="text-white/60 text-xs sm:text-sm leading-relaxed">
+              Engineered with clean enterprise layered architecture: Controllers, Services, Repositories, JPA Entities, and high-performance REST APIs.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mission & Core Features Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="p-6 rounded-2xl bg-[#171717] border border-white/10 shadow-lg">
+          <div class="w-10 h-10 rounded-xl bg-[#e50914]/15 border border-[#e50914]/30 flex items-center justify-center text-[#e50914] text-lg mb-4">
+            <i class="bi bi-compass-fill"></i>
+          </div>
+          <h3 class="text-lg font-bold font-display text-white mb-2">Our Mission</h3>
+          <p class="text-white/60 text-xs sm:text-sm leading-relaxed">
+            To provide an intuitive, high-speed, and visually stunning movie portal that allows users to quickly search, filter, and curate cinematic masterpieces.
+          </p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-[#171717] border border-white/10 shadow-lg">
+          <div class="w-10 h-10 rounded-xl bg-amber-400/15 border border-amber-400/30 flex items-center justify-center text-amber-400 text-lg mb-4">
+            <i class="bi bi-stars"></i>
+          </div>
+          <h3 class="text-lg font-bold font-display text-white mb-2">Key Features</h3>
+          <ul class="space-y-1.5 text-white/60 text-xs sm:text-sm">
+            <li>• Instant dynamic search by title & cast</li>
+            <li>• Multi-genre filtering with active pills</li>
+            <li>• Complete movie metadata (Director, Cast, Date)</li>
+            <li>• Favourites watchlist with real-time sync</li>
+          </ul>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-[#171717] border border-white/10 shadow-lg">
+          <div class="w-10 h-10 rounded-xl bg-sky-400/15 border border-sky-400/30 flex items-center justify-center text-sky-400 text-lg mb-4">
+            <i class="bi bi-code-slash"></i>
+          </div>
+          <h3 class="text-lg font-bold font-display text-white mb-2">Clean Architecture</h3>
+          <p class="text-white/60 text-xs sm:text-sm leading-relaxed">
+            Adheres strictly to enterprise Java conventions: Spring Boot MVC, Spring Data JPA repositories, DTO transfers, custom exception handlers, and relational MySQL schemas.
+          </p>
+        </div>
+      </div>
+
+      <!-- Tech Stack Details -->
+      <div class="p-6 md:p-10 rounded-2xl bg-[#171717] border border-white/10 shadow-xl">
+        <h2 class="text-xl font-bold font-display text-white mb-6 flex items-center gap-2">
+          <i class="bi bi-stack text-[#e50914]"></i> Technology Stack Details
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="p-4 rounded-xl bg-white/5 border border-white/5">
+            <h4 class="text-amber-400 font-bold text-sm mb-2"><i class="bi bi-filetype-java me-1.5"></i>Backend</h4>
+            <ul class="space-y-1 text-white/60 text-xs">
+              <li>• Java 17 / Java 21</li>
+              <li>• Spring Boot 3.x</li>
+              <li>• Spring MVC (REST APIs)</li>
+              <li>• Spring Data JPA & Hibernate</li>
+              <li>• Spring Security (BCrypt Hashing)</li>
+            </ul>
+          </div>
+
+          <div class="p-4 rounded-xl bg-white/5 border border-white/5">
+            <h4 class="text-sky-400 font-bold text-sm mb-2"><i class="bi bi-database-check me-1.5"></i>Database</h4>
+            <ul class="space-y-1 text-white/60 text-xs">
+              <li>• MySQL 8.0+</li>
+              <li>• JPA Entities & Table Mappings</li>
+              <li>• Foreign Key Cascading</li>
+              <li>• SQL DDL Schema & DML Seeds</li>
+              <li>• Connection Pooling (HikariCP)</li>
+            </ul>
+          </div>
+
+          <div class="p-4 rounded-xl bg-white/5 border border-white/5">
+            <h4 class="text-[#e50914] font-bold text-sm mb-2"><i class="bi bi-palette-fill me-1.5"></i>Frontend UI</h4>
+            <ul class="space-y-1 text-white/60 text-xs">
+              <li>• HTML5 & Semantic Web</li>
+              <li>• Tailwind CSS Utilities</li>
+              <li>• Bootstrap Icons (1.11+)</li>
+              <li>• Dark Cinematic Visual Theme</li>
+              <li>• Fully Responsive Grid</li>
+            </ul>
+          </div>
+
+          <div class="p-4 rounded-xl bg-white/5 border border-white/5">
+            <h4 class="text-emerald-400 font-bold text-sm mb-2"><i class="bi bi-arrow-repeat me-1.5"></i>Client Engine</h4>
+            <ul class="space-y-1 text-white/60 text-xs">
+              <li>• Vanilla JavaScript (ES6+)</li>
+              <li>• Fetch API Async/Await</li>
+              <li>• JSON Payloads & DTOs</li>
+              <li>• Local Storage Session State</li>
+              <li>• Skeleton Loaders & Toast Alerts</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-[#0a0a0a] border-t border-white/10 pt-12 pb-8 mt-auto text-sm text-white/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-6 border-b border-white/10 text-xs">
+        <a href="index.html" class="flex items-center gap-2 text-lg font-bold font-display text-white">
+          <div class="w-6 h-6 rounded-lg bg-[#e50914] flex items-center justify-center text-white text-xs">
+            <i class="bi bi-film"></i>
+          </div>
+          <span><span class="text-[#e50914]">MOVIE</span><span class="text-white">VERSE</span></span>
+        </a>
+        <div class="flex items-center gap-6">
+          <a href="index.html" class="hover:text-white transition-colors">Home</a>
+          <a href="movies.html" class="hover:text-white transition-colors">Browse Movies</a>
+          <a href="favourites.html" class="hover:text-white transition-colors">Favourites</a>
+          <a href="about.html" class="text-white font-medium">About</a>
+          <a href="architecture.html" class="hover:text-white transition-colors text-amber-400">Java Architecture</a>
+        </div>
+      </div>
+      <p class="text-center text-xs text-white/40 mt-6">© 2026 MovieVerse. Spring Boot REST API + Tailwind CSS.</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- MovieVerse App Engine JS -->
+  <script src="js/app.js"></script>
+  <script>
+    const mobileToggle = document.getElementById('mobileMenuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (mobileToggle && mobileMenu) {
+      mobileToggle.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+        const icon = document.getElementById('menuIcon');
+        if (mobileMenu.classList.contains('hidden')) {
+          icon.className = 'bi bi-list text-2xl';
+        } else {
+          icon.className = 'bi bi-x-lg text-2xl';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

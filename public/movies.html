@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explore Movies - MovieVerse</title>
+  <meta name="description" content="Explore and filter movies by genre, rating, and release date on MovieVerse.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            mv: {
+              bg: '#050505',
+              secondary: '#0f0f0f',
+              card: '#171717',
+              cardHover: '#212121',
+              accent: '#e50914',
+              accentHover: '#ff2633',
+              textPrimary: '#ffffff',
+              textSecondary: '#a3a3a3',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Poppins', 'Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Bootstrap 5 CSS (for dropdown compatibility) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Custom MovieVerse CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-[#050505] text-white min-h-screen font-sans flex flex-col selection:bg-[#e50914] selection:text-white">
+
+  <!-- Sticky Navbar -->
+  <header class="sticky top-0 z-50 bg-[#050505]/90 backdrop-blur-xl border-b border-white/10" id="mainNavbar">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 md:h-20 gap-4">
+        
+        <!-- Logo Brand -->
+        <a href="index.html" class="flex items-center gap-2 text-xl md:text-2xl font-black font-display tracking-wider text-white shrink-0 group">
+          <div class="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-[#e50914] flex items-center justify-center text-white shadow-lg shadow-[#e50914]/30 group-hover:scale-105 transition-transform">
+            <i class="bi bi-film text-base md:text-lg"></i>
+          </div>
+          <span><span class="text-[#e50914]">MOVIE</span><span class="text-white">VERSE</span></span>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden lg:flex items-center gap-1 xl:gap-2">
+          <a href="index.html" class="nav-link-custom font-medium text-sm">
+            <i class="bi bi-house-door me-1.5"></i>Home
+          </a>
+          <a href="movies.html" class="nav-link-custom active font-medium text-sm">
+            <i class="bi bi-collection-play me-1.5"></i>Movies
+          </a>
+          <a href="favourites.html" class="nav-link-custom font-medium text-sm">
+            <i class="bi bi-heart me-1.5"></i>Favourites
+          </a>
+          <a href="about.html" class="nav-link-custom font-medium text-sm">
+            <i class="bi bi-info-circle me-1.5"></i>About
+          </a>
+          <a href="architecture.html" class="nav-link-custom font-medium text-sm text-amber-400/90 hover:text-amber-400">
+            <i class="bi bi-cpu me-1.5"></i>Java Architecture
+          </a>
+        </nav>
+
+        <!-- Auth Section & Mobile Hamburger -->
+        <div class="flex items-center gap-3">
+          <div id="navbarAuthSection" class="hidden sm:block">
+            <!-- Dynamic User or Login/Register buttons injected by app.js -->
+          </div>
+
+          <!-- Mobile Hamburger Toggle -->
+          <button type="button" 
+                  id="mobileMenuToggle"
+                  class="lg:hidden p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 focus:outline-none"
+                  aria-label="Toggle menu">
+            <i class="bi bi-list text-2xl" id="menuIcon"></i>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Mobile Dropdown Menu -->
+      <div id="mobileMenu" class="hidden lg:hidden border-t border-white/10 py-4 px-2 space-y-2 animate-fade-in">
+        <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 font-medium">
+          <i class="bi bi-house-door text-white/60"></i> Home
+        </a>
+        <a href="movies.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-white font-medium bg-white/5">
+          <i class="bi bi-collection-play text-[#e50914]"></i> Movies
+        </a>
+        <a href="favourites.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 font-medium">
+          <i class="bi bi-heart text-[#e50914]"></i> Favourites
+        </a>
+        <a href="about.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 font-medium">
+          <i class="bi bi-info-circle text-white/60"></i> About
+        </a>
+        <a href="architecture.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-amber-400/90 hover:text-amber-400 hover:bg-white/5 font-medium">
+          <i class="bi bi-cpu"></i> Java Architecture
+        </a>
+
+        <div id="mobileNavbarAuthSection" class="pt-3 border-t border-white/10 sm:hidden">
+          <!-- Injected by app.js -->
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-grow py-8 md:py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Page Header & Large Search Box -->
+      <div class="mb-8 md:mb-10">
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-6 border-b border-white/10">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e50914]/15 border border-[#e50914]/30 text-[#e50914] text-xs font-bold uppercase tracking-wider mb-2">
+              <i class="bi bi-collection-play"></i> Full Catalog
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-black font-display text-white tracking-tight">
+              Explore Movies
+            </h1>
+            <p class="text-white/60 text-sm sm:text-base mt-1">
+              Find your next favourite movie across top blockbusters, timeless classics, and trending releases.
+            </p>
+          </div>
+
+          <!-- Large Horizontal Search Bar -->
+          <div class="w-full lg:max-w-md relative">
+            <div class="relative flex items-center">
+              <i class="bi bi-search absolute left-4 text-white/40 text-base"></i>
+              <input type="text" 
+                     id="pageSearchInput" 
+                     placeholder="Search movies by title, cast, or director..." 
+                     class="w-full bg-[#171717] border border-white/15 text-white placeholder-white/40 text-sm rounded-xl pl-11 pr-10 py-3.5 focus:outline-none focus:border-[#e50914] focus:ring-1 focus:ring-[#e50914] shadow-lg transition-all"
+                     autocomplete="off">
+              <button id="clearSearchBtn" 
+                      type="button" 
+                      class="hidden absolute right-3 text-white/40 hover:text-white transition-colors p-1"
+                      onclick="clearSearch()" 
+                      aria-label="Clear search">
+                <i class="bi bi-x-circle-fill text-base"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters and Sort Toolbar -->
+      <div class="bg-[#171717] border border-white/10 p-4 rounded-2xl shadow-xl mb-8">
+        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+          
+          <!-- Genre Filter Pills (Horizontal Scroll on Mobile) -->
+          <div class="w-full lg:w-auto overflow-x-auto pb-1 lg:pb-0" style="scrollbar-width: thin;" id="genreFilterList">
+            <div class="flex items-center gap-2">
+              <button class="genre-filter-pill active" data-genre="All">All</button>
+              <button class="genre-filter-pill" data-genre="Action">Action</button>
+              <button class="genre-filter-pill" data-genre="Comedy">Comedy</button>
+              <button class="genre-filter-pill" data-genre="Drama">Drama</button>
+              <button class="genre-filter-pill" data-genre="Sci-Fi">Sci-Fi</button>
+              <button class="genre-filter-pill" data-genre="Horror">Horror</button>
+              <button class="genre-filter-pill" data-genre="Romance">Romance</button>
+              <button class="genre-filter-pill" data-genre="Thriller">Thriller</button>
+              <button class="genre-filter-pill" data-genre="Animation">Animation</button>
+              <button class="genre-filter-pill" data-genre="Crime">Crime</button>
+              <button class="genre-filter-pill" data-genre="Adventure">Adventure</button>
+            </div>
+          </div>
+
+          <!-- Sort Selector -->
+          <div class="flex items-center gap-2.5 shrink-0 self-end lg:self-auto">
+            <label for="sortBySelect" class="text-xs font-semibold text-white/50 text-nowrap flex items-center gap-1.5">
+              <i class="bi bi-sort-down text-sm"></i> Sort By:
+            </label>
+            <select id="sortBySelect" class="bg-[#0f0f0f] text-white border border-white/15 text-xs font-medium rounded-lg px-3 py-2 focus:outline-none focus:border-[#e50914] cursor-pointer">
+              <option value="featured">Featured (Recommended)</option>
+              <option value="rating">Top Rated (IMDb)</option>
+              <option value="date">Release Date (Newest)</option>
+              <option value="title">Title (A-Z)</option>
+            </select>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Results Count & Active Filter Indicator -->
+      <div class="flex items-center justify-between text-xs text-white/60 mb-6 px-1">
+        <div id="resultsCountBadge">Loading movies...</div>
+        <button onclick="resetFilters()" class="text-[#e50914] hover:underline font-semibold flex items-center gap-1">
+          <i class="bi bi-arrow-counterclockwise"></i> Reset Filters
+        </button>
+      </div>
+
+      <!-- Movies Grid Container -->
+      <div id="moviesGrid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
+        <!-- Injected dynamically -->
+      </div>
+
+      <!-- Empty State -->
+      <div id="emptyStateView" class="hidden text-center py-16 px-4 bg-[#171717]/50 rounded-2xl border border-white/10 mt-6 max-w-lg mx-auto">
+        <div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4 text-[#e50914] text-3xl">
+          <i class="bi bi-camera-reels"></i>
+        </div>
+        <h3 class="text-xl font-bold font-display text-white mb-2">No Movies Found</h3>
+        <p class="text-white/60 text-sm mb-6">
+          We couldn't find any movie matching your current search term or genre filters. Try searching for another movie or reset the filters.
+        </p>
+        <button onclick="resetFilters()" class="btn-mv-primary px-6 py-2.5 rounded-xl text-sm font-semibold inline-flex items-center gap-2">
+          <i class="bi bi-arrow-counterclockwise"></i> Reset All Filters
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-[#0a0a0a] border-t border-white/10 pt-12 pb-8 mt-auto text-sm text-white/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-6 border-b border-white/10 text-xs">
+        <a href="index.html" class="flex items-center gap-2 text-lg font-bold font-display text-white">
+          <div class="w-6 h-6 rounded-lg bg-[#e50914] flex items-center justify-center text-white text-xs">
+            <i class="bi bi-film"></i>
+          </div>
+          <span><span class="text-[#e50914]">MOVIE</span><span class="text-white">VERSE</span></span>
+        </a>
+        <div class="flex items-center gap-6">
+          <a href="index.html" class="hover:text-white transition-colors">Home</a>
+          <a href="movies.html" class="text-white font-medium">Browse Movies</a>
+          <a href="favourites.html" class="hover:text-white transition-colors">Favourites</a>
+          <a href="about.html" class="hover:text-white transition-colors">About</a>
+          <a href="architecture.html" class="hover:text-white transition-colors text-amber-400">Java Architecture</a>
+        </div>
+      </div>
+      <p class="text-center text-xs text-white/40 mt-6">© 2026 MovieVerse. Spring Boot REST API + Tailwind CSS.</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- MovieVerse App Engine JS -->
+  <script src="js/app.js"></script>
+
+  <!-- Page Specific Logic -->
+  <script>
+    let currentGenre = "All";
+    let currentSort = "featured";
+    let searchQuery = "";
+    let debounceTimer = null;
+
+    // Mobile Hamburger Menu Toggle
+    const mobileToggle = document.getElementById('mobileMenuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (mobileToggle && mobileMenu) {
+      mobileToggle.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+        const icon = document.getElementById('menuIcon');
+        if (mobileMenu.classList.contains('hidden')) {
+          icon.className = 'bi bi-list text-2xl';
+        } else {
+          icon.className = 'bi bi-x-lg text-2xl';
+        }
+      });
+    }
+
+    function parseUrlParams() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.has("genre")) {
+        currentGenre = params.get("genre");
+      }
+      if (params.has("search")) {
+        searchQuery = params.get("search");
+        const input = document.getElementById("pageSearchInput");
+        if (input) input.value = searchQuery;
+      }
+      if (params.has("sort")) {
+        currentSort = params.get("sort");
+        const sortSelect = document.getElementById("sortBySelect");
+        if (sortSelect) sortSelect.value = currentSort;
+      }
+
+      // Update genre pills active class
+      document.querySelectorAll(".genre-filter-pill").forEach(pill => {
+        if (pill.dataset.genre.toLowerCase() === currentGenre.toLowerCase()) {
+          pill.classList.add("active");
+        } else {
+          pill.classList.remove("active");
+        }
+      });
+    }
+
+    async function fetchAndRenderMovies() {
+      const grid = document.getElementById("moviesGrid");
+      const emptyState = document.getElementById("emptyStateView");
+      const countBadge = document.getElementById("resultsCountBadge");
+      const clearBtn = document.getElementById("clearSearchBtn");
+
+      if (searchQuery && clearBtn) {
+        clearBtn.classList.remove("hidden");
+      } else if (clearBtn) {
+        clearBtn.classList.add("hidden");
+      }
+
+      if (grid) grid.innerHTML = createSkeletonCardsHtml(10);
+      if (emptyState) emptyState.classList.add("hidden");
+
+      try {
+        let url = `/api/movies?`;
+        if (searchQuery.trim()) {
+          url += `title=${encodeURIComponent(searchQuery.trim())}&`;
+        }
+        if (currentGenre && currentGenre !== "All") {
+          url += `genre=${encodeURIComponent(currentGenre)}&`;
+        }
+        if (currentSort && currentSort !== "featured") {
+          url += `sort=${encodeURIComponent(currentSort)}&`;
+        }
+
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("API error");
+        const movies = await res.json();
+
+        if (movies && movies.length > 0) {
+          if (countBadge) {
+            countBadge.innerHTML = `Showing <span class="text-white font-bold">${movies.length}</span> movies ${currentGenre !== 'All' ? `in <span class="text-[#e50914] font-bold">${escapeHtml(currentGenre)}</span>` : ''} ${searchQuery ? `matching "<span class="text-amber-400 font-bold">${escapeHtml(searchQuery)}</span>"` : ''}`;
+          }
+          if (grid) grid.innerHTML = movies.map(m => createMovieCardHtml(m)).join("");
+          if (emptyState) emptyState.classList.add("hidden");
+        } else {
+          if (countBadge) countBadge.textContent = "0 movies found";
+          if (grid) grid.innerHTML = "";
+          if (emptyState) emptyState.classList.remove("hidden");
+        }
+      } catch (err) {
+        console.error("Error fetching movies:", err);
+        if (grid) {
+          grid.innerHTML = `
+            <div class="col-span-full text-center py-12 text-[#e50914]">
+              <i class="bi bi-exclamation-triangle text-3xl mb-2 block"></i>
+              <p class="text-sm font-semibold">Unable to load movies from server. Please try again.</p>
+              <button onclick="fetchAndRenderMovies()" class="btn-mv-primary mt-3 px-4 py-2 text-xs rounded-lg">
+                <i class="bi bi-arrow-clockwise me-1"></i> Retry
+              </button>
+            </div>
+          `;
+        }
+      }
+    }
+
+    function clearSearch() {
+      searchQuery = "";
+      const input = document.getElementById("pageSearchInput");
+      if (input) input.value = "";
+      fetchAndRenderMovies();
+    }
+
+    function resetFilters() {
+      currentGenre = "All";
+      currentSort = "featured";
+      searchQuery = "";
+      const input = document.getElementById("pageSearchInput");
+      if (input) input.value = "";
+      const sortSelect = document.getElementById("sortBySelect");
+      if (sortSelect) sortSelect.value = "featured";
+      document.querySelectorAll(".genre-filter-pill").forEach(pill => {
+        pill.classList.toggle("active", pill.dataset.genre === "All");
+      });
+      fetchAndRenderMovies();
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      parseUrlParams();
+      fetchAndRenderMovies();
+
+      // Genre pills
+      document.querySelectorAll(".genre-filter-pill").forEach(pill => {
+        pill.addEventListener("click", () => {
+          document.querySelectorAll(".genre-filter-pill").forEach(p => p.classList.remove("active"));
+          pill.classList.add("active");
+          currentGenre = pill.dataset.genre;
+          fetchAndRenderMovies();
+        });
+      });
+
+      // Sort Select
+      const sortSelect = document.getElementById("sortBySelect");
+      if (sortSelect) {
+        sortSelect.addEventListener("change", (e) => {
+          currentSort = e.target.value;
+          fetchAndRenderMovies();
+        });
+      }
+
+      // Search input with debounce
+      const searchInput = document.getElementById("pageSearchInput");
+      if (searchInput) {
+        searchInput.addEventListener("input", (e) => {
+          clearTimeout(debounceTimer);
+          searchQuery = e.target.value;
+          debounceTimer = setTimeout(() => {
+            fetchAndRenderMovies();
+          }, 300);
+        });
+      }
+    });
+  </script>
+</body>
+</html>

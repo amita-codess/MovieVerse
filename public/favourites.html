@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Favourites - MovieVerse</title>
+  <meta name="description" content="Manage and view your personal bookmarked favourite movies on MovieVerse.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            mv: {
+              bg: '#050505',
+              secondary: '#0f0f0f',
+              card: '#171717',
+              cardHover: '#212121',
+              accent: '#e50914',
+              accentHover: '#ff2633',
+              textPrimary: '#ffffff',
+              textSecondary: '#a3a3a3',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Poppins', 'Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Bootstrap 5 CSS (for dropdowns) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Custom MovieVerse CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-[#050505] text-white min-h-screen font-sans flex flex-col selection:bg-[#e50914] selection:text-white">
+
+  <!-- Sticky Navbar -->
+  <header class="sticky top-0 z-50 bg-[#050505]/90 backdrop-blur-xl border-b border-white/10" id="mainNavbar">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 md:h-20 gap-4">
+        
+        <!-- Logo Brand -->
+        <a href="index.html" class="flex items-center gap-2 text-xl md:text-2xl font-black font-display tracking-wider text-white shrink-0 group">
+          <div class="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-[#e50914] flex items-center justify-center text-white shadow-lg shadow-[#e50914]/30 group-hover:scale-105 transition-transform">
+            <i class="bi bi-film text-base md:text-lg"></i>
+          </div>
+          <span><span class="text-[#e50914]">MOVIE</span><span class="text-white">VERSE</span></span>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden lg:flex items-center gap-1 xl:gap-2">
+          <a href="index.html" class="nav-link-custom font-medium text-sm">
+            <i class="bi bi-house-door me-1.5"></i>Home
+          </a>
+          <a href="movies.html" class="nav-link-custom font-medium text-sm">
+            <i class="bi bi-collection-play me-1.5"></i>Movies
+          </a>
+          <a href="favourites.html" class="nav-link-custom active font-medium text-sm">
+            <i class="bi bi-heart me-1.5"></i>Favourites
+          </a>
+          <a href="about.html" class="nav-link-custom font-medium text-sm">
+            <i class="bi bi-info-circle me-1.5"></i>About
+          </a>
+          <a href="architecture.html" class="nav-link-custom font-medium text-sm text-amber-400/90 hover:text-amber-400">
+            <i class="bi bi-cpu me-1.5"></i>Java Architecture
+          </a>
+        </nav>
+
+        <!-- Auth Section & Mobile Hamburger -->
+        <div class="flex items-center gap-3">
+          <div id="navbarAuthSection" class="hidden sm:block"></div>
+
+          <button type="button" 
+                  id="mobileMenuToggle"
+                  class="lg:hidden p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 focus:outline-none"
+                  aria-label="Toggle menu">
+            <i class="bi bi-list text-2xl" id="menuIcon"></i>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Mobile Dropdown Menu -->
+      <div id="mobileMenu" class="hidden lg:hidden border-t border-white/10 py-4 px-2 space-y-2 animate-fade-in">
+        <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 font-medium">
+          <i class="bi bi-house-door text-white/60"></i> Home
+        </a>
+        <a href="movies.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 font-medium">
+          <i class="bi bi-collection-play text-white/60"></i> Movies
+        </a>
+        <a href="favourites.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-white font-medium bg-white/5">
+          <i class="bi bi-heart text-[#e50914]"></i> Favourites
+        </a>
+        <a href="about.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 font-medium">
+          <i class="bi bi-info-circle text-white/60"></i> About
+        </a>
+        <a href="architecture.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-amber-400/90 hover:text-amber-400 hover:bg-white/5 font-medium">
+          <i class="bi bi-cpu"></i> Java Architecture
+        </a>
+        <div id="mobileNavbarAuthSection" class="pt-3 border-t border-white/10 sm:hidden"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-grow py-8 md:py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Page Header -->
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 mb-8 border-b border-white/10">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e50914]/15 border border-[#e50914]/30 text-[#e50914] text-xs font-bold uppercase tracking-wider mb-2">
+            <i class="bi bi-heart-fill"></i> Personal Collection
+          </div>
+          <h1 class="text-3xl sm:text-4xl font-black font-display text-white tracking-tight">
+            My Favourite Movies
+          </h1>
+          <p class="text-white/60 text-sm sm:text-base mt-1" id="favSubheading">
+            Your saved movies and watchlist synchronized with your account.
+          </p>
+        </div>
+        <div>
+          <a href="movies.html" class="btn-mv-secondary px-4 py-2.5 rounded-xl text-xs font-semibold inline-flex items-center gap-2">
+            <i class="bi bi-plus-lg"></i> Add More Movies
+          </a>
+        </div>
+      </div>
+
+      <!-- State 1: Unauthenticated View -->
+      <div id="unauthenticatedState" class="hidden max-w-lg mx-auto py-16 px-6 text-center bg-[#171717]/60 rounded-2xl border border-white/10 shadow-2xl">
+        <div class="w-16 h-16 rounded-full bg-[#e50914]/15 border border-[#e50914]/30 flex items-center justify-center mx-auto mb-4 text-[#e50914] text-2xl">
+          <i class="bi bi-lock-fill"></i>
+        </div>
+        <h2 class="text-2xl font-bold font-display text-white mb-2">Sign in to View Favourites</h2>
+        <p class="text-white/60 text-sm leading-relaxed mb-6">
+          Your personal watchlist is saved securely to your account. Sign in or create a free account to view and manage your favourite movies.
+        </p>
+        <div class="flex items-center justify-center gap-3">
+          <a href="login.html" class="btn-mv-primary px-6 py-2.5 rounded-xl text-sm font-semibold">
+            <i class="bi bi-box-arrow-in-right me-1.5"></i> Sign In
+          </a>
+          <a href="register.html" class="btn-mv-secondary px-6 py-2.5 rounded-xl text-sm font-semibold">
+            Create Account
+          </a>
+        </div>
+      </div>
+
+      <!-- State 2: Authenticated View -->
+      <div id="authenticatedView" class="hidden">
+        <div id="favCardsContainer" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
+          <!-- Injected dynamically -->
+        </div>
+
+        <!-- Empty Favourites State -->
+        <div id="emptyFavsState" class="hidden text-center py-20 px-4 bg-[#171717]/40 rounded-2xl border border-white/10 max-w-lg mx-auto">
+          <div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4 text-[#e50914] text-3xl">
+            <i class="bi bi-heart"></i>
+          </div>
+          <h3 class="text-2xl font-bold font-display text-white mb-2">Your Watchlist is Empty</h3>
+          <p class="text-white/60 text-sm leading-relaxed mb-6">
+            You haven't added any movies to your favourites yet. Explore our trending and top rated movies and click the heart icon to save them!
+          </p>
+          <a href="movies.html" class="btn-mv-primary px-6 py-3 rounded-xl text-sm font-bold inline-flex items-center gap-2 shadow-lg shadow-[#e50914]/20">
+            <i class="bi bi-collection-play"></i> Browse Movies Now
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-[#0a0a0a] border-t border-white/10 pt-12 pb-8 mt-auto text-sm text-white/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-6 border-b border-white/10 text-xs">
+        <a href="index.html" class="flex items-center gap-2 text-lg font-bold font-display text-white">
+          <div class="w-6 h-6 rounded-lg bg-[#e50914] flex items-center justify-center text-white text-xs">
+            <i class="bi bi-film"></i>
+          </div>
+          <span><span class="text-[#e50914]">MOVIE</span><span class="text-white">VERSE</span></span>
+        </a>
+        <div class="flex items-center gap-6">
+          <a href="index.html" class="hover:text-white transition-colors">Home</a>
+          <a href="movies.html" class="hover:text-white transition-colors">Browse Movies</a>
+          <a href="favourites.html" class="text-white font-medium">Favourites</a>
+          <a href="about.html" class="hover:text-white transition-colors">About</a>
+          <a href="architecture.html" class="hover:text-white transition-colors text-amber-400">Java Architecture</a>
+        </div>
+      </div>
+      <p class="text-center text-xs text-white/40 mt-6">© 2026 MovieVerse. Spring Boot REST API + Tailwind CSS.</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- MovieVerse App Engine JS -->
+  <script src="js/app.js"></script>
+
+  <!-- Page Specific Logic -->
+  <script>
+    // Mobile Hamburger Menu Toggle
+    const mobileToggle = document.getElementById('mobileMenuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (mobileToggle && mobileMenu) {
+      mobileToggle.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+        const icon = document.getElementById('menuIcon');
+        if (mobileMenu.classList.contains('hidden')) {
+          icon.className = 'bi bi-list text-2xl';
+        } else {
+          icon.className = 'bi bi-x-lg text-2xl';
+        }
+      });
+    }
+
+    async function loadFavouritesPage() {
+      const user = Auth.getUser();
+      const unauthEl = document.getElementById('unauthenticatedState');
+      const authView = document.getElementById('authenticatedView');
+      const container = document.getElementById('favCardsContainer');
+      const emptyEl = document.getElementById('emptyFavsState');
+      const subHeading = document.getElementById('favSubheading');
+
+      if (!user) {
+        if (unauthEl) unauthEl.classList.remove('hidden');
+        if (authView) authView.classList.add('hidden');
+        return;
+      }
+
+      if (unauthEl) unauthEl.classList.add('hidden');
+      if (authView) authView.classList.remove('hidden');
+      if (subHeading) subHeading.textContent = `Curated watchlist for ${user.name} (${user.email})`;
+      if (container) container.innerHTML = createSkeletonCardsHtml(5);
+
+      try {
+        const headers = {};
+        if (user.token) {
+          headers["Authorization"] = `Bearer ${user.token}`;
+        }
+        const res = await fetch(`/api/favourites/${user.id}`, { headers });
+        if (!res.ok) throw new Error('Failed to load favourites');
+        
+        const favList = await res.json();
+
+        if (favList && favList.length > 0) {
+          if (emptyEl) emptyEl.classList.add('hidden');
+          if (container) {
+            container.innerHTML = favList.map(item => {
+              const movie = item.movie;
+              const releaseYear = movie.releaseDate && movie.releaseDate.length >= 4 
+                ? movie.releaseDate.substring(0, 4) 
+                : (movie.year || "----");
+              const primaryGenre = movie.genre ? movie.genre.split(",")[0].trim() : "Movie";
+              const posterSrc = getValidPosterUrl(movie.posterUrl);
+              const ratingText = typeof movie.rating === 'number' ? movie.rating.toFixed(1) : (movie.rating || 'N/A');
+
+              return `
+                <div class="mv-movie-card group" id="fav-card-${movie.id}">
+                  <div class="mv-poster-box">
+                    <img src="${escapeHtml(posterSrc)}" 
+                         alt="${escapeHtml(movie.title)} poster" 
+                         class="mv-poster-img" 
+                         loading="lazy" 
+                         onerror="this.onerror=null; this.src=POSTER_FALLBACK_SVG;">
+                    
+                    <div class="mv-poster-overlay"></div>
+
+                    <div class="absolute top-2.5 left-2.5 bg-black/75 backdrop-blur-md px-2 py-0.5 rounded-full text-xs font-bold text-amber-400 border border-white/10 flex items-center gap-1 shadow-lg z-10">
+                      <i class="bi bi-star-fill text-xs text-amber-400"></i>
+                      <span>${ratingText}</span>
+                    </div>
+
+                    <button class="card-fav-btn is-fav" 
+                            onclick="removeFav(${movie.id}, event)" 
+                            title="Remove from Favourites">
+                      <i class="bi bi-trash3-fill text-sm"></i>
+                    </button>
+                  </div>
+
+                  <div class="p-3.5 flex flex-col flex-grow justify-between bg-[#171717]">
+                    <div>
+                      <a href="movie-details.html?id=${movie.id}" class="text-white font-semibold text-sm line-clamp-1 hover:text-[#e50914] transition-colors" title="${escapeHtml(movie.title)}">
+                        ${escapeHtml(movie.title)}
+                      </a>
+                      <div class="flex items-center justify-between text-xs text-white/50 mt-1.5 mb-3">
+                        <span class="flex items-center gap-1 font-medium"><i class="bi bi-calendar-event text-[11px]"></i>${releaseYear}</span>
+                        <span class="bg-white/10 px-2 py-0.5 rounded-full text-[11px] text-white/70 font-medium">${escapeHtml(primaryGenre)}</span>
+                      </div>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                      <a href="movie-details.html?id=${movie.id}" class="btn-mv-primary py-2 px-3 text-xs flex-1 flex items-center justify-center gap-1.5 rounded-lg">
+                        <i class="bi bi-play-circle text-sm"></i> Details
+                      </a>
+                      <button onclick="removeFav(${movie.id}, event)" class="py-2 px-2.5 text-xs text-white/40 hover:text-[#e50914] hover:bg-white/5 rounded-lg border border-white/10 transition-colors" title="Remove">
+                        <i class="bi bi-trash3 text-sm"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join('');
+          }
+        } else {
+          if (container) container.innerHTML = '';
+          if (emptyEl) emptyEl.classList.remove('hidden');
+        }
+      } catch (err) {
+        console.error('Error fetching favourites:', err);
+        if (container) {
+          container.innerHTML = `
+            <div class="col-span-full text-center py-8 text-[#e50914]">
+              <p>Failed to load favourites. Please check your connection.</p>
+            </div>
+          `;
+        }
+      }
+    }
+
+    async function removeFav(movieId, e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      const user = Auth.getUser();
+      if (!user) return;
+
+      try {
+        const headers = {};
+        if (user.token) {
+          headers["Authorization"] = `Bearer ${user.token}`;
+        }
+        const res = await fetch(`/api/favourites/${user.id}/${movieId}`, {
+          method: 'DELETE',
+          headers
+        });
+
+        if (res.ok) {
+          Favourites.favMovieIds.delete(movieId);
+          localStorage.setItem("movieverse_fav_ids", JSON.stringify(Array.from(Favourites.favMovieIds)));
+          Toast.show('Movie removed from favourites', 'info');
+
+          const card = document.getElementById(`fav-card-${movieId}`);
+          if (card) {
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.9)';
+            card.style.transition = 'all 0.3s ease';
+            setTimeout(() => {
+              card.remove();
+              const container = document.getElementById('favCardsContainer');
+              if (container && container.children.length === 0) {
+                const emptyEl = document.getElementById('emptyFavsState');
+                if (emptyEl) emptyEl.classList.remove('hidden');
+              }
+            }, 300);
+          }
+        } else {
+          Toast.show('Failed to remove favourite', 'danger');
+        }
+      } catch (err) {
+        console.error(err);
+        Toast.show('Network error while removing favourite', 'danger');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadFavouritesPage();
+    });
+  </script>
+</body>
+</html>

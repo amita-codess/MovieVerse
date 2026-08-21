@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Java Backend Architecture - MovieVerse</title>
+  <meta name="description" content="Detailed Java Spring Boot, JPA, MySQL architecture, and interview notes for MovieVerse.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            mv: {
+              bg: '#050505',
+              secondary: '#0f0f0f',
+              card: '#171717',
+              cardHover: '#212121',
+              accent: '#e50914',
+              accentHover: '#ff2633',
+              textPrimary: '#ffffff',
+              textSecondary: '#a3a3a3',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Poppins', 'Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Bootstrap 5 CSS (for pill tab switching & dropdowns) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Custom MovieVerse CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-[#050505] text-white min-h-screen font-sans flex flex-col selection:bg-[#e50914] selection:text-white">
+
+  <!-- Sticky Navbar -->
+  <header class="sticky top-0 z-50 bg-[#050505]/90 backdrop-blur-xl border-b border-white/10" id="mainNavbar">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 md:h-20 gap-4">
+        
+        <!-- Logo Brand -->
+        <a href="index.html" class="flex items-center gap-2 text-xl md:text-2xl font-black font-display tracking-wider text-white shrink-0 group">
+          <div class="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-[#e50914] flex items-center justify-center text-white shadow-lg shadow-[#e50914]/30 group-hover:scale-105 transition-transform">
+            <i class="bi bi-film text-base md:text-lg"></i>
+          </div>
+          <span><span class="text-[#e50914]">MOVIE</span><span class="text-white">VERSE</span></span>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden lg:flex items-center gap-1 xl:gap-2">
+          <a href="index.html" class="nav-link-custom font-medium text-sm">
+            <i class="bi bi-house-door me-1.5"></i>Home
+          </a>
+          <a href="movies.html" class="nav-link-custom font-medium text-sm">
+            <i class="bi bi-collection-play me-1.5"></i>Movies
+          </a>
+          <a href="favourites.html" class="nav-link-custom font-medium text-sm">
+            <i class="bi bi-heart me-1.5"></i>Favourites
+          </a>
+          <a href="about.html" class="nav-link-custom font-medium text-sm">
+            <i class="bi bi-info-circle me-1.5"></i>About
+          </a>
+          <a href="architecture.html" class="nav-link-custom active font-medium text-sm text-amber-400">
+            <i class="bi bi-cpu me-1.5"></i>Java Architecture
+          </a>
+        </nav>
+
+        <!-- Auth Section & Mobile Hamburger -->
+        <div class="flex items-center gap-3">
+          <div id="navbarAuthSection" class="hidden sm:block"></div>
+
+          <button type="button" 
+                  id="mobileMenuToggle"
+                  class="lg:hidden p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 focus:outline-none"
+                  aria-label="Toggle menu">
+            <i class="bi bi-list text-2xl" id="menuIcon"></i>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Mobile Dropdown Menu -->
+      <div id="mobileMenu" class="hidden lg:hidden border-t border-white/10 py-4 px-2 space-y-2 animate-fade-in">
+        <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 font-medium">
+          <i class="bi bi-house-door text-white/60"></i> Home
+        </a>
+        <a href="movies.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 font-medium">
+          <i class="bi bi-collection-play text-white/60"></i> Movies
+        </a>
+        <a href="favourites.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 font-medium">
+          <i class="bi bi-heart text-[#e50914]"></i> Favourites
+        </a>
+        <a href="about.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 font-medium">
+          <i class="bi bi-info-circle text-white/60"></i> About
+        </a>
+        <a href="architecture.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-amber-400 font-medium bg-white/5">
+          <i class="bi bi-cpu"></i> Java Architecture
+        </a>
+        <div id="mobileNavbarAuthSection" class="pt-3 border-t border-white/10 sm:hidden"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-grow py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Page Header -->
+      <div class="mb-8 pb-6 border-b border-white/10">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/15 border border-amber-400/30 text-amber-400 text-xs font-bold uppercase tracking-wider mb-3">
+          <i class="bi bi-cpu-fill"></i> Java 17 + Spring Boot 3 + MySQL
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-black font-display text-white tracking-tight">
+          Java Backend Architecture & REST Reference
+        </h1>
+        <p class="text-white/60 text-sm sm:text-base mt-2 max-w-3xl">
+          Comprehensive enterprise structural guide, database schema design, and interview explanation notes for the <strong>MovieVerse</strong> full-stack project.
+        </p>
+      </div>
+
+      <!-- Pill Tabs -->
+      <ul class="nav nav-pills flex flex-wrap gap-2 mb-8" id="archTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="genre-filter-pill active" id="overview-tab" data-bs-toggle="pill" data-bs-target="#tab-overview" type="button" role="tab">
+            <i class="bi bi-diagram-3-fill me-1.5"></i> Layered Architecture
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="genre-filter-pill" id="apis-tab" data-bs-toggle="pill" data-bs-target="#tab-apis" type="button" role="tab">
+            <i class="bi bi-signpost-split-fill me-1.5"></i> REST APIs Catalog
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="genre-filter-pill" id="db-tab" data-bs-toggle="pill" data-bs-target="#tab-db" type="button" role="tab">
+            <i class="bi bi-database-fill-gear me-1.5"></i> MySQL Schema (DDL)
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="genre-filter-pill" id="run-tab" data-bs-toggle="pill" data-bs-target="#tab-run" type="button" role="tab">
+            <i class="bi bi-terminal-fill me-1.5"></i> Run in IDE / CLI
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="genre-filter-pill" id="qa-tab" data-bs-toggle="pill" data-bs-target="#tab-qa" type="button" role="tab">
+            <i class="bi bi-question-circle-fill me-1.5"></i> Interview Q&A
+          </button>
+        </li>
+      </ul>
+
+      <!-- Tab Contents -->
+      <div class="tab-content" id="archTabsContent">
+        
+        <!-- Tab 1: Layered Architecture -->
+        <div class="tab-pane fade show active" id="tab-overview" role="tabpanel">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <div class="p-6 rounded-2xl bg-[#171717] border border-white/10 shadow-xl">
+              <h3 class="text-lg font-bold font-display text-white mb-3 flex items-center gap-2">
+                <i class="bi bi-folder2-open text-[#e50914]"></i> Maven Project Structure
+              </h3>
+              <div class="code-block text-xs">
+MovieVerse/
+├── pom.xml
+├── README.md
+└── src/
+    └── main/
+        ├── java/com/movieverse/
+        │   ├── MovieVerseApplication.java
+        │   ├── config/
+        │   │   ├── SecurityConfig.java
+        │   │   └── WebConfig.java
+        │   ├── controller/
+        │   │   ├── AuthController.java
+        │   │   ├── MovieController.java
+        │   │   └── FavouriteController.java
+        │   ├── service/
+        │   │   ├── UserService.java
+        │   │   ├── MovieService.java
+        │   │   └── FavouriteService.java
+        │   ├── repository/
+        │   │   ├── UserRepository.java
+        │   │   ├── MovieRepository.java
+        │   │   └── FavouriteRepository.java
+        │   ├── entity/
+        │   │   ├── User.java
+        │   │   ├── Movie.java
+        │   │   └── Favourite.java
+        │   ├── dto/
+        │   │   ├── LoginRequest.java
+        │   │   ├── RegisterRequest.java
+        │   │   └── FavouriteRequest.java
+        │   └── exception/
+        │       ├── ResourceNotFoundException.java
+        │       └── GlobalExceptionHandler.java
+        └── resources/
+            ├── application.properties
+            ├── schema.sql
+            └── static/
+              </div>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-[#171717] border border-white/10 shadow-xl">
+              <h3 class="text-lg font-bold font-display text-white mb-3 flex items-center gap-2">
+                <i class="bi bi-layers-fill text-amber-400"></i> Flow of Control
+              </h3>
+              <ol class="space-y-4 text-xs sm:text-sm text-white/70">
+                <li class="p-3 rounded-xl bg-white/5 border border-white/5">
+                  <strong class="text-white block mb-1">1. Client / Browser (Tailwind UI):</strong>
+                  HTML5 and JavaScript trigger async <code>fetch()</code> requests with JSON payloads.
+                </li>
+                <li class="p-3 rounded-xl bg-white/5 border border-white/5">
+                  <strong class="text-white block mb-1">2. Controller Layer (<code>@RestController</code>):</strong>
+                  Receives HTTP requests, validates DTOs (<code>@Valid</code>), and invokes the service layer.
+                </li>
+                <li class="p-3 rounded-xl bg-white/5 border border-white/5">
+                  <strong class="text-white block mb-1">3. Service Layer (<code>@Service</code>):</strong>
+                  Handles business logic, transactions (<code>@Transactional</code>), and BCrypt hashing.
+                </li>
+                <li class="p-3 rounded-xl bg-white/5 border border-white/5">
+                  <strong class="text-white block mb-1">4. Repository Layer (<code>@Repository</code>):</strong>
+                  Extends <code>JpaRepository</code> for CRUD operations, pagination, and JPQL queries.
+                </li>
+                <li class="p-3 rounded-xl bg-white/5 border border-white/5">
+                  <strong class="text-white block mb-1">5. Database Layer (MySQL):</strong>
+                  Persists user records, movie catalog metadata, and favourite associations.
+                </li>
+              </ol>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tab 2: REST APIs Catalog -->
+        <div class="tab-pane fade" id="tab-apis" role="tabpanel">
+          <div class="p-6 rounded-2xl bg-[#171717] border border-white/10 shadow-xl">
+            <h3 class="text-lg font-bold font-display text-white mb-4">REST API Endpoints</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs sm:text-sm text-left">
+                <thead class="bg-white/5 text-white/50 text-[11px] uppercase">
+                  <tr>
+                    <th class="p-3">Method</th>
+                    <th class="p-3">Endpoint</th>
+                    <th class="p-3">Description</th>
+                    <th class="p-3">Status</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-white/5 text-white/80">
+                  <tr>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 font-bold font-mono">GET</span></td>
+                    <td class="p-3 font-mono text-white">/api/movies</td>
+                    <td class="p-3">Get all movies (supports ?title, ?genre, ?sort)</td>
+                    <td class="p-3 text-emerald-400">200 OK</td>
+                  </tr>
+                  <tr>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 font-bold font-mono">GET</span></td>
+                    <td class="p-3 font-mono text-white">/api/movies/{id}</td>
+                    <td class="p-3">Get single movie details dynamically by ID</td>
+                    <td class="p-3 text-emerald-400">200 OK / 404</td>
+                  </tr>
+                  <tr>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded bg-blue-950 text-blue-400 font-bold font-mono">POST</span></td>
+                    <td class="p-3 font-mono text-white">/api/auth/login</td>
+                    <td class="p-3">Authenticate user credentials (BCrypt check)</td>
+                    <td class="p-3 text-emerald-400">200 OK / 401</td>
+                  </tr>
+                  <tr>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded bg-blue-950 text-blue-400 font-bold font-mono">POST</span></td>
+                    <td class="p-3 font-mono text-white">/api/auth/register</td>
+                    <td class="p-3">Register a new user account with hashed password</td>
+                    <td class="p-3 text-emerald-400">201 Created</td>
+                  </tr>
+                  <tr>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 font-bold font-mono">GET</span></td>
+                    <td class="p-3 font-mono text-white">/api/favourites/{userId}</td>
+                    <td class="p-3">Get user's favourited movie list</td>
+                    <td class="p-3 text-emerald-400">200 OK</td>
+                  </tr>
+                  <tr>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded bg-blue-950 text-blue-400 font-bold font-mono">POST</span></td>
+                    <td class="p-3 font-mono text-white">/api/favourites</td>
+                    <td class="p-3">Add movie to user's favourites</td>
+                    <td class="p-3 text-emerald-400">200 OK / 409</td>
+                  </tr>
+                  <tr>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded bg-red-950 text-red-400 font-bold font-mono">DELETE</span></td>
+                    <td class="p-3 font-mono text-white">/api/favourites/{userId}/{movieId}</td>
+                    <td class="p-3">Remove movie from user's favourites</td>
+                    <td class="p-3 text-emerald-400">200 OK</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: MySQL Schema -->
+        <div class="tab-pane fade" id="tab-db" role="tabpanel">
+          <div class="p-6 rounded-2xl bg-[#171717] border border-white/10 shadow-xl">
+            <h3 class="text-lg font-bold font-display text-white mb-3">MySQL DDL Tables</h3>
+            <div class="code-block text-xs">
+CREATE TABLE IF NOT EXISTS users (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS movies (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    genre VARCHAR(100),
+    rating DOUBLE,
+    duration VARCHAR(50),
+    release_date VARCHAR(50),
+    director VARCHAR(150),
+    starring_cast TEXT,
+    language VARCHAR(100),
+    country VARCHAR(100),
+    poster_url VARCHAR(500),
+    backdrop_url VARCHAR(500),
+    trailer_url VARCHAR(500),
+    is_trending BOOLEAN DEFAULT FALSE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS favourites (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    movie_id BIGINT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_fav_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT fk_fav_movie FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE,
+    CONSTRAINT uq_user_movie UNIQUE (user_id, movie_id)
+) ENGINE=InnoDB;
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 4: Run CLI -->
+        <div class="tab-pane fade" id="tab-run" role="tabpanel">
+          <div class="p-6 rounded-2xl bg-[#171717] border border-white/10 shadow-xl">
+            <h3 class="text-lg font-bold font-display text-white mb-3">Build & Run Commands</h3>
+            <div class="code-block text-xs">
+# 1. Build and package the Spring Boot JAR
+mvn clean package -DskipTests
+
+# 2. Run the application locally
+mvn spring-boot:run
+
+# Or run the compiled standalone JAR
+java -jar target/movieverse-1.0.0.jar
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 5: Interview Q&A -->
+        <div class="tab-pane fade" id="tab-qa" role="tabpanel">
+          <div class="space-y-4">
+            <div class="p-5 rounded-2xl bg-[#171717] border border-white/10 shadow-lg">
+              <h4 class="text-white font-bold text-sm mb-1.5 flex items-center gap-2">
+                <i class="bi bi-patch-question-fill text-amber-400"></i> How do you handle password security in Spring Boot?
+              </h4>
+              <p class="text-white/70 text-xs sm:text-sm leading-relaxed">
+                We use <code>BCryptPasswordEncoder</code> from Spring Security. Passwords are never stored in plain text. On registration, the password is salted and hashed before persistence, and during login, <code>passwordEncoder.matches(raw, encoded)</code> validates the hash.
+              </p>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-[#171717] border border-white/10 shadow-lg">
+              <h4 class="text-white font-bold text-sm mb-1.5 flex items-center gap-2">
+                <i class="bi bi-patch-question-fill text-amber-400"></i> How is data transferred between frontend and backend?
+              </h4>
+              <p class="text-white/70 text-xs sm:text-sm leading-relaxed">
+                The frontend communicates asynchronously using the modern <code>Fetch API</code> with JSON payloads. The Spring Boot backend exposes REST endpoints annotated with <code>@RestController</code>, parsing JSON into typed Java DTOs using Jackson.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-[#0a0a0a] border-t border-white/10 pt-12 pb-8 mt-auto text-sm text-white/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-6 border-b border-white/10 text-xs">
+        <a href="index.html" class="flex items-center gap-2 text-lg font-bold font-display text-white">
+          <div class="w-6 h-6 rounded-lg bg-[#e50914] flex items-center justify-center text-white text-xs">
+            <i class="bi bi-film"></i>
+          </div>
+          <span><span class="text-[#e50914]">MOVIE</span><span class="text-white">VERSE</span></span>
+        </a>
+        <div class="flex items-center gap-6">
+          <a href="index.html" class="hover:text-white transition-colors">Home</a>
+          <a href="movies.html" class="hover:text-white transition-colors">Browse Movies</a>
+          <a href="favourites.html" class="hover:text-white transition-colors">Favourites</a>
+          <a href="about.html" class="hover:text-white transition-colors">About</a>
+          <a href="architecture.html" class="text-white font-medium">Java Architecture</a>
+        </div>
+      </div>
+      <p class="text-center text-xs text-white/40 mt-6">© 2026 MovieVerse. Spring Boot REST API + Tailwind CSS.</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- MovieVerse App Engine JS -->
+  <script src="js/app.js"></script>
+  <script>
+    const mobileToggle = document.getElementById('mobileMenuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (mobileToggle && mobileMenu) {
+      mobileToggle.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+        const icon = document.getElementById('menuIcon');
+        if (mobileMenu.classList.contains('hidden')) {
+          icon.className = 'bi bi-list text-2xl';
+        } else {
+          icon.className = 'bi bi-x-lg text-2xl';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
